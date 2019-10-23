@@ -1,0 +1,43 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - microblog</title>
+        {% else %}
+        <title>microblog</title>
+        {% endif %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    </head>
+    <body>
+        <div>
+            Inscription:
+            <a href="{{ url_for('index') }}">Home</a>
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for('login') }}">Login</a>
+            {% else %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+                {% if current_user.rank == "Administrator" %}
+                <a href="{{ url_for('show_users') }}">Users List</a>
+                <a href="{{ url_for('register_DPGPAS') }}">register DPGPAS</a>
+                <a href="{{ url_for('register_DSPGPGC') }}">register DSPGPGC</a>
+                <a href="{{ url_for('show_DPGPAS') }}">show DPGPAS</a>
+                <a href="{{ url_for('show_DSPGPGC') }}">show DSPGPGC</a>
+                
+                {% endif %}
+            {% endif %}
+
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li id="warning">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        <div id="div-form">
+        {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>

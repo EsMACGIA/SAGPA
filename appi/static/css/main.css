@@ -1,0 +1,30 @@
+html { 
+  background:   url("/static/pictures/USB.jpeg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+}
+
+#div-form{
+  background-color: rgb(211,211,211);
+  color:  rgb(47,79,79);
+  display: inline-block;
+  
+  border-radius: 10px;
+  box-shadow: 0 2px 1px #222;
+  padding-top: 1px;
+  padding-bottom: 10px;
+  padding-left: 1%;
+  padding-right: 2%;
+  
+}
+
+#view-title{
+  font-family: Arial;
+}
+
+#warning{
+  color: red;
+}
+
+.btn-danger{
+  color: red;
+}

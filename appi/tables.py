@@ -2,7 +2,7 @@ from flask_table import Table, Col, LinkCol
  
 class Users_Table(Table):
 
-    
+    classes = ['greenTable']
     id = Col('Id', show=False)
     username = Col('Username')
     email = Col('Email')
@@ -13,6 +13,7 @@ class Users_Table(Table):
 
 class DPGPAS_Table(Table):
 
+    classes = ['greenTable']
     id = Col('Id', show=False)
     description = Col('Description')
     edit = LinkCol('Edit', 'edit_DPGPAS', url_kwargs=dict(id='id'))
@@ -21,6 +22,7 @@ class DPGPAS_Table(Table):
 
 class DSPGPGC_Table(Table):
 
+    classes = ['greenTable']
     id = Col('Id', show=False)
     description = Col('Description')
     edit = LinkCol('Edit', 'edit_DSPGPGC', url_kwargs=dict(id='id'))

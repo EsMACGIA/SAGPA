@@ -1,18 +1,11 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
     <h1 id="view-title">Register {{ discipline_type }}</h1>
     <hr>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.description.label }}<br>
-            {{ form.description(size=32) }}<br>
-            {% for error in form.description.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-
-        <p>{{ form.submit() }}</p>
-    </form>
+    <div class="row">
+            <div class="col-sm-10">
+                {{ wtf.quick_form(form) }}
+            </div>
+    </div>
 {% endblock %}

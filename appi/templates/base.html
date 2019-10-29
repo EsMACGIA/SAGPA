@@ -1,32 +1,61 @@
-<html>
-    <head>
+
+    
+    
+    {% extends "bootstrap/base.html" %}   
+    {% block head %}
+     
+        {{ super() }}
         {% if title %}
         <title>{{ title }} - microblog</title>
         {% else %}
         <title>microblog</title>
         {% endif %}
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    </head>
-    <body>
-        <div>
-            Inscription:
-            <a href="{{ url_for('index') }}">Home</a>
-            {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
-            {% else %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-                {% if current_user.rank == "Administrator" %}
-                <a href="{{ url_for('show_users') }}">Users List</a>
-                <a href="{{ url_for('register_DPGPAS') }}">register DPGPAS</a>
-                <a href="{{ url_for('register_DSPGPGC') }}">register DSPGPGC</a>
-                <a href="{{ url_for('show_DPGPAS') }}">show DPGPAS</a>
-                <a href="{{ url_for('show_DSPGPGC') }}">show DSPGPGC</a>
-                
-                {% endif %}
-            {% endif %}
+    {% endblock %}
+    
 
-        </div>
-        <hr>
+    {% block navbar %}
+    <nav id="navid" class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="#">USB</a>
+            <ul class="nav nav-pills">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+              </li>
+              <li class="nav-item">
+                    {% if current_user.is_anonymous %}
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    {% else %}
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    {% endif %}
+              </li>
+              {% if current_user.rank == "Administrator" %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Configuration</a>
+                <div class="dropdown-menu light-gray">
+
+                    
+                    <a href="{{ url_for('show_users') }}">Users List</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <a href="{{ url_for('register_DPGPAS') }}">register DPGPAS</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <a href="{{ url_for('register_DSPGPGC') }}">register DSPGPGC</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <a href="{{ url_for('show_DPGPAS') }}">show DPGPAS</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <a href="{{ url_for('show_DSPGPGC') }}">show DSPGPGC</a>
+                        
+                    
+   
+                </div>
+              </li>
+              {% endif %}
+            </ul>
+    </nav>
+    {% endblock %}
+
+    {% block content %}
+    <body>
+
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <ul>
@@ -36,8 +65,18 @@
         </ul>
         {% endif %}
         {% endwith %}
-        <div id="div-form">
-        {% block content %}{% endblock %}
-        </div>
+
+        {% if table is defined %}
+            <div id="div-form-table">
+                {% block table_content %}{% endblock %}
+            </div>
+        {% else %}
+            <div id="div-form">
+                {% block app_content %}{% endblock %}
+            </div>
+        {% endif %}
+
     </body>
-</html>
+    
+    {% endblock %}
+

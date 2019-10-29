@@ -1,9 +1,59 @@
-html { 
-  background:   url("/static/pictures/USB.jpeg") no-repeat center center fixed; 
-  -webkit-background-size: cover;
+body, html{
+  height: 100%;
+  background-color: transparent;
+}
+
+html {
+    /* The image used */
+    background-image: url("/static/pictures/USB.jpeg");
+
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.bg {
+  /* The image used */
+  background-image: url("/static/pictures/USB.jpeg");
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.light-gray{
+  background-color: rgb(238, 225, 225);
+}
+
+#navid {
+  background-color: rgb(211,211,211);
 }
 
 #div-form{
+  background-color: rgb(211,211,211);
+  color:  rgb(47,79,79);
+  display: inline-block;
+  width: 20%;
+  
+  border-radius: 10px;
+  box-shadow: 0 2px 1px #222;
+  padding-top: 1px;
+  padding-bottom: 10px;
+  padding-left: 1%;
+  padding-right: 2%;
+  margin-left: 2%;
+  
+  
+}
+
+#div-form-table{
   background-color: rgb(211,211,211);
   color:  rgb(47,79,79);
   display: inline-block;
@@ -14,6 +64,8 @@ html {
   padding-bottom: 10px;
   padding-left: 1%;
   padding-right: 2%;
+  margin-left: 2%;
+  
   
 }
 

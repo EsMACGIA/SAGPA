@@ -11,34 +11,26 @@ from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table
 @app.route('/index')
 @login_required
 def index():
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
+    posts = []
     return render_template("index.html", title='Home Page', posts=posts)
-
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
+
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
-            return redirect(url_for('login'))
+
+            return redirect(url_for('login')), 400
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
+
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
@@ -65,14 +57,14 @@ def register():
 @app.route('/show_users', methods=['GET', 'POST'])
 @login_required
 def show_users():
-
     if(current_user.rank != 'Administrator'):
-        flash('You are not an Administrator');
-        return render_template('index.html', title='Home Page')
+        flash('You are not an Administrator')
+
+        return render_template('index.html', title='Home Page'), 400
     query = User.query.all()
     table = Users_Table(query)
     table.border = True
-    return render_template('users_list.html', title="Users List", table=table)
+    return render_template('users_list.html', title="Users List", table=table), 200
 
 
 
@@ -121,7 +113,7 @@ def edit_user(id):
 
         return render_template('edit_user.html', form=form)
     else:
-        console.log("base de datos no consiguio el usuario")
+        print("base de datos no consiguio el usuario")
         return 'Error loading #{id}'.format(id=id)
 
 
@@ -207,7 +199,7 @@ def edit_DPGPAS(id):
 
         return render_template('edit_DPGPAS.html', form=form)
     else:
-        console.log("base de datos no consiguio la disciplina")
+        # print("base de datos no consiguio la disciplina")
         return 'Error loading #{id}'.format(id=id)
 
 @app.route('/delete_DPGPAS/<int:id>', methods=['GET', 'POST'])
@@ -266,8 +258,6 @@ def show_DSPGPGC():
 @login_required
 def edit_DSPGPGC(id):
 
-    
- 
     if(current_user.rank != 'Administrator'):
         flash('You are not an Administrator');
         return render_template('index.html', title='Home Page')
@@ -297,7 +287,7 @@ def edit_DSPGPGC(id):
 
         return render_template('edit_DSPGPGC.html', form=form)
     else:
-        console.log("base de datos no consiguio la disciplina")
+        # print("base de datos no consiguio la disciplina")
         return 'Error loading #{id}'.format(id=id)
 
 @app.route('/delete_DSPGPGC/<int:id>', methods=['GET', 'POST'])

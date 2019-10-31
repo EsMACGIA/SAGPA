@@ -9,3 +9,6 @@ class Config(object):
     # Normalmente alchemy anvia una sennal al servidor antes de cada cambio a la base de dato
     # con esto apagamos esa funcion
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    BASEDIR = basedir
+    TESTING = True
+    LOGIN_DISABLED = False

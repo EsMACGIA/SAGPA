@@ -17,6 +17,7 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    query = ProcessGroup.query.all()
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()

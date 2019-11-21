@@ -70,5 +70,10 @@ class EditFormDSPGPGC(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Edit')
 
+class RegistrationFormProcessGroup(FlaskForm):
+    description = StringField('Description',validators=[DataRequired()])
+    SubmitField = SubmitField('Register')
 
-
+class EditFormProcessGroup(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Edit')

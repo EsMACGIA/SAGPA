@@ -1,18 +1,19 @@
 from flask import render_template, flash, redirect, url_for, request
 from appi import app, db
 from flask_login import current_user, login_user, logout_user, login_required
-from appi.models import User, DPGPAS, DSPGPGC
+from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup
 from werkzeug.urls import url_parse
 from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
                          EditFormDPGPAS, EditFormDSPGPGC
-from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table
+from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table
 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
     posts = []
-    return render_template("index.html", title='Home Page', posts=posts)
+    query = ProcessGroup.query.all()
+    return render_template("index.html", title='Home Page', posts=posts, processes=query)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -32,7 +33,7 @@ def login():
             next_page = url_for('index')
 
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title='Sign In', form=form, processes=query)
 
 @app.route('/logout')
 def logout():
@@ -52,7 +53,7 @@ def register():
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form=form, processes=query)
 
 @app.route('/show_users', methods=['GET', 'POST'])
 @login_required
@@ -64,7 +65,8 @@ def show_users():
     query = User.query.all()
     table = Users_Table(query)
     table.border = True
-    return render_template('users_list.html', title="Users List", table=table), 200
+    query = ProcessGroup.query.all()
+    return render_template('users_list.html', title="Users List", table=table, processes=query), 200
 
 
 
@@ -110,8 +112,8 @@ def edit_user(id):
             db.session.commit()
             flash('User updated successfully!')
             return redirect('/')
-
-        return render_template('edit_user.html', form=form)
+        query = ProcessGroup.query.all()
+        return render_template('edit_user.html', form=form, processes=query)
     else:
         print("base de datos no consiguio el usuario")
         return 'Error loading #{id}'.format(id=id)
@@ -130,8 +132,8 @@ def delete_user(id):
         db.session.delete(user)
         db.session.commit()
         flash('User deleted successfully');
-
-    return render_template('index.html', title='Home Page')
+    query = ProcessGroup.query.all()
+    return render_template('index.html', title='Home Page', processes=query)
 
 # DPGPAS Routes
 
@@ -150,7 +152,8 @@ def register_DPGPAS():
         db.session.commit()
         flash('New Gerencia de Proyectos Agrícolas adedded')
         return redirect(url_for('index'))
-    return render_template('register_discipline.html', title='Register DPGPAS', form=form,  discipline_type="DPGPAS")
+    query = ProcessGroup.query.all()
+    return render_template('register_discipline.html', title='Register DPGPAS', form=form,  discipline_type="Disciplina de Proceso", processes=query)
 
 @app.route('/show_DPGPAS', methods=['GET', 'POST'])
 @login_required
@@ -162,7 +165,8 @@ def show_DPGPAS():
     query = DPGPAS.query.all()
     table = DPGPAS_Table(query)
     table.border = True
-    return render_template('DPGPAS_list.html', title="DPGPAS List", table=table)
+    query = ProcessGroup.query.all()
+    return render_template('DPGPAS_list.html', title="DPGPAS List", table=table, processes=query)
 
 @app.route('/edit_DPGPAS/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -175,6 +179,7 @@ def edit_DPGPAS(id):
         return render_template('index.html', title='Home Page')
 
     discipline = DPGPAS.query.filter_by(id=id).first()
+    query = ProcessGroup.query.all()
 
     if discipline:
         form = EditFormDPGPAS(formdata=request.form, obj=discipline)
@@ -197,7 +202,7 @@ def edit_DPGPAS(id):
             flash('Discipline updated successfully!')
             return redirect('/')
 
-        return render_template('edit_DPGPAS.html', form=form)
+        return render_template('edit_DPGPAS.html', form=form, processes=query)
     else:
         # print("base de datos no consiguio la disciplina")
         return 'Error loading #{id}'.format(id=id)
@@ -205,6 +210,7 @@ def edit_DPGPAS(id):
 @app.route('/delete_DPGPAS/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_DPGPAS(id):
+    query = ProcessGroup.query.all()
 
     if(current_user.rank != 'Administrator'):
         flash('You are not an Administrator');
@@ -219,13 +225,14 @@ def delete_DPGPAS(id):
     else:
         flash('Not such discipline!');
 
-    return render_template('index.html', title='Home Page')
+    return render_template('index.html', title='Home Page', processes=query)
 
 # DSPGPGC Routes
 
 @app.route('/register_DSPGPGC', methods=['GET', 'POST'])
 @login_required
 def register_DSPGPGC():
+    query = ProcessGroup.query.all()
 
     if(current_user.rank != 'Administrator'):
         flash('You are not an Administrator');
@@ -238,7 +245,7 @@ def register_DSPGPGC():
         db.session.commit()
         flash('New Gerencia de Proyectos Agrícolas adedded')
         return redirect(url_for('index'))
-    return render_template('register_discipline.html', title='Register DSPGPGC', form=form,  discipline_type="DSPGPGC")
+    return render_template('register_discipline.html', title='Register DSPGPGC', form=form,  discipline_type="Disciplina de Soporte", processes=query)
 
 
 @app.route('/show_DSPGPGC', methods=['GET', 'POST'])
@@ -251,12 +258,14 @@ def show_DSPGPGC():
     query = DSPGPGC.query.all()
     table = DSPGPGC_Table(query)
     table.border = True
-    return render_template('DSPGPGC_list.html', title="DSPGPGC List", table=table)
+    query = ProcessGroup.query.all()
+    return render_template('DSPGPGC_list.html', title="DSPGPGC List", table=table, processes=query)
 
 
 @app.route('/edit_DSPGPGC/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_DSPGPGC(id):
+    query = ProcessGroup.query.all()
 
     if(current_user.rank != 'Administrator'):
         flash('You are not an Administrator');
@@ -285,7 +294,7 @@ def edit_DSPGPGC(id):
             flash('Discipline updated successfully!')
             return redirect('/')
 
-        return render_template('edit_DSPGPGC.html', form=form)
+        return render_template('edit_DSPGPGC.html', form=form, processes=query)
     else:
         # print("base de datos no consiguio la disciplina")
         return 'Error loading #{id}'.format(id=id)
@@ -293,6 +302,7 @@ def edit_DSPGPGC(id):
 @app.route('/delete_DSPGPGC/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_DSPGPGC(id):
+    query = ProcessGroup.query.all()
 
     if(current_user.rank != 'Administrator'):
         flash('You are not an Administrator');
@@ -307,4 +317,17 @@ def delete_DSPGPGC(id):
     else:
         flash('Not such discipline!');
 
-    return render_template('index.html', title='Home Page')
+    return render_template('index.html', title='Home Page', processes=query)
+
+@app.route('/process_groups', methods=['GET'])
+@login_required
+def show_process_groups():
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+    query = ProcessGroup.query.all()
+    table = DSPGPGC_Table(query)
+    table.border = True
+    return render_template('process_groups_list.html', title="Grupo de Procesos", table=table, processes=query)

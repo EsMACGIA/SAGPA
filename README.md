@@ -7,7 +7,7 @@ Pasos necesarios para la configuración del ambiente.
 1. Correr `python -m venv venv`
 2. Correr `source vevnv/bin/activate`
 3. Correr `pip install -r requirements.txt`
-4. Correr `export FLASK_APP=tarea3.py`
+4. Correr `export FLASK_APP=main.py`
 5. Correr `import flask`
 
 

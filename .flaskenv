@@ -1,2 +1,2 @@
-FLASK_APP=tarea3.py
+FLASK_APP=main.py
 

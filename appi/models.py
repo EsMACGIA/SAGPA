@@ -48,3 +48,9 @@ class DSPGPGC(db.Model):
     def __repr__(self):
         return '<Disciplinas de soporte al proceso de gerencia de proyectos para Gestionar la Configuración del sistema {}>'.format(self.description)
 
+class ProcessGroup(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description =  db.Column(db.String(140), unique=True)
+    def __repr__(self):
+        return '<Grupos de Procesos para Gestionar la Configuración del Sistem {}>'.format(self.description)
+

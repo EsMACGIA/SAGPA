@@ -29,5 +29,12 @@ class DSPGPGC_Table(Table):
     delete = LinkCol('Delete', 'delete_DSPGPGC', url_kwargs=dict(id='id'), 
                     anchor_attrs={'id': 'warning'})
     
+class ProcessGroup_Table(Table):
 
+    classes = ["table table-hover"]
+    id = Col('Id', show=False)
+    description = Col('Description')
+    edit = LinkCol('Edit', 'edit_DSPGPGC', url_kwargs=dict(id='id'))
+    delete = LinkCol('Delete', 'delete_DSPGPGC', url_kwargs=dict(id='id'), 
+                    anchor_attrs={'id': 'warning'})
    

@@ -347,7 +347,7 @@ def register_process_group():
         db.session.add(process_group)
         db.session.commit()
         flash('New Process Group added')
-        return redirect(url_for('index'))
+        return redirect(url_for('show_process_groups'))
     query = ProcessGroup.query.all()
     return render_template('register_process_groups.html', title='Register Process Group', form=form,  process_group="Grupo de Proceso", processes=query)
 
@@ -381,7 +381,7 @@ def edit_process_group(id):
             process_group.description = new_description
             db.session.commit()
             flash('Process Group updated successfully!')
-            return redirect('/')
+            return redirect(url_for('show_process_groups'))
 
         return render_template('edit_process_group.html', form=form, processes=query)
     else:
@@ -402,6 +402,7 @@ def delete_process_group(id):
         db.session.delete(process_group)
         db.session.commit()
         flash('Discipline deleted successfully')
+        return redirect(url_for('show_process_groups'))
 
     else:
         flash('Not such discipline!')

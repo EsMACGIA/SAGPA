@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from appi.models import User, DPGPAS, DSPGPGC, Tec, Tool
+from appi.models import User, DPGPAS, DSPGPGC, Tec, Tool, ProcessGroup
 
 
 #Users Forms
@@ -70,7 +70,18 @@ class EditFormDSPGPGC(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Edit')
 
+class RegistrationFormProcessGroup(FlaskForm):
+    description = StringField('Description',validators=[DataRequired()])
+    SubmitField = SubmitField('Register')
 
+class EditFormProcessGroup(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Edit')
+
+    def validate_description(self, description):
+        query = Tec.query.filter_by(description=description.data).first()
+        if query is not None:
+            raise ValidationError('Please use a different description.')
 #Tec forms 
 class RegistrationFormTec(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
@@ -91,7 +102,7 @@ class RegistrationFormTool(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_description(self, description):
-        query = Tool.query.filter_by(description=description.data).first()
+        query = ProcessGroup.query.filter_by(description=description.data).first()
         if query is not None:
             raise ValidationError('Please use a different description.')
 

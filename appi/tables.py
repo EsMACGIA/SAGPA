@@ -34,8 +34,8 @@ class ProcessGroup_Table(Table):
     classes = ["table table-hover"]
     id = Col('Id', show=False)
     description = Col('Description')
-    edit = LinkCol('Edit', 'edit_DSPGPGC', url_kwargs=dict(id='id'))
-    delete = LinkCol('Delete', 'delete_DSPGPGC', url_kwargs=dict(id='id'), 
+    edit = LinkCol('Edit', 'edit_process_group', url_kwargs=dict(id='id'))
+    delete = LinkCol('Delete', 'delete_process_group', url_kwargs=dict(id='id'), 
                     anchor_attrs={'id': 'warning'})
    
 class Tec_Table(Table):

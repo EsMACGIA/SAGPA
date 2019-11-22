@@ -6,6 +6,12 @@ from werkzeug.urls import url_parse
 from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
                          EditFormDPGPAS, EditFormDSPGPGC, RegistrationFormProcessGroupWithDPGPAS2, RegistrationFormProcessGroupWithDSPGPGC2
 from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, EnablingDisciplines_Table, SupportingDisciplines_Table
+from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, Tec, Tool, ParticipantsActors
+from werkzeug.urls import url_parse
+from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
+                         EditFormDPGPAS, EditFormDSPGPGC, RegistrationFormProcessGroup, EditFormProcessGroup, \
+                         EditFormTec, EditFormTool, RegistrationFormTec, RegistrationFormTool, RegistrationFormActor
+from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, Tools_Table, Tec_Table, Participants_Actors_Table
 
 @app.route('/')
 @app.route('/index')
@@ -17,6 +23,7 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    query = ProcessGroup.query.all()
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -43,6 +50,8 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    query = ProcessGroup.query.all()
+
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
@@ -312,6 +321,8 @@ def delete_DSPGPGC(id):
 
     return render_template('index.html', title='Home Page', processes=query)
 
+##Process Gruops Routes 
+
 @app.route('/process_groups', methods=['GET'])
 @login_required
 def show_process_groups():
@@ -321,7 +332,7 @@ def show_process_groups():
         flash('You are not an Administrator');
         return render_template('index.html', title='Home Page')
     query = ProcessGroup.query.all()
-    table = DSPGPGC_Table(query)
+    table = ProcessGroup_Table(query)
     table.border = True
     return render_template('process_groups_list.html', title="Grupo de Procesos", table=table, processes=query)
 

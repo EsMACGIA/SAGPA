@@ -4,6 +4,9 @@
 
 <h1 id="view-title">Grupos de Procesos</h1>
 <hr>
+<a href="{{ url_for('register_process_group') }}">
+    <button href="{{ url_for('register_process_group')}}" type="button" class="btn btn-primary btn-sm my-button">Agregar Grupo de Proceso</button>
+  </a>
 {{ table }}
 
 {% endblock %}

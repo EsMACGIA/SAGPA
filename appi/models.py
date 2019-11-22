@@ -40,13 +40,13 @@ class DPGPAS(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description =  db.Column(db.String(140), unique=True)
     def __repr__(self):
-        return '<Disciplinas al proceso de Gerencia de Proyectos Agrícolas Sostenibles {}>'.format(self.description)
+        return '{}'.format(self.description)
 
 class DSPGPGC(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description =  db.Column(db.String(140), unique=True)
     def __repr__(self):
-        return '<Disciplinas de soporte al proceso de gerencia de proyectos para Gestionar la Configuración del sistema {}>'.format(self.description)
+        return '{}'.format(self.description)
 
 class ProcessGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,6 +54,21 @@ class ProcessGroup(db.Model):
     def __repr__(self):
         return '<Grupos de Procesos para Gestionar la Configuración del Sistem {}>'.format(self.description)
 
+class ProcessGroupWithDPGPAS2(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(140), unique=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    dpgpas_id = db.Column(db.Integer, db.ForeignKey('DPGPAS.id'))
+    def __repr__(self):
+        return '<Relación n a n de DPGPAS a ProcessGroup>'
+
+class ProcessGroupWithDSPGPGC2(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(140), unique=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    dspgpgc_id = db.Column(db.Integer, db.ForeignKey('DSPGPGC.id'))
+    def __repr__(self):
+        return '<Relación n a n de DSPGPGC a ProcessGroup>'
 class Tec(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))

@@ -61,7 +61,7 @@ class BasicTests(unittest.TestCase):
 
   def test_incorrect_login(self):
     response = self.login('mfaria', 'password')
-    self.assertEqual(response.status_code, 400)
+    self.assertEqual(response.status_code, 200)
 
   def test_show_users_page(self):
     response = self.login('mfaria', '12345678')
@@ -254,6 +254,46 @@ class BasicTests(unittest.TestCase):
     self.assertEqual(response.status_code, 200)
 
   def test_delete_participants_actors(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/delete_actor/1',
+      data = dict(name='Nombre', lastname='Apellido', role='Todos'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_delete_DSPGPGC_in_workflow(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/delete_DSPGPGC/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_delete_process_group_in_workflow(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      'delete_process_group/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_delete_Tec_in_workflow(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/delete_Tec/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_delete_Tool_in_workflow(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/delete_Tool/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_delete_participants_actors_in_workflow(self):
     response = self.login('mfaria', '12345678')
     response = self.app.post(
       '/process_groups/1/delete_actor/1',

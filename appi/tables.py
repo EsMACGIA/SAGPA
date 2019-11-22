@@ -56,3 +56,13 @@ class Tools_Table(Table):
     delete = LinkCol('Delete', 'delete_Tool', url_kwargs=dict(id='id', pid='process_id'), 
                     anchor_attrs={'id': 'warning'})
 
+class Participants_Actors_Table(Table):
+
+    classes = ["table table-hover"]
+    id = Col('Id', show=False)
+    name = Col('Nombre')
+    lastname = Col('Apellido')
+    role = Col('Rol')
+    edit = LinkCol('Edit', 'edit_participant_actor', url_kwargs=dict(id='id', pid='process_id'))
+    delete = LinkCol('Delete', 'delete_participant_actor', url_kwargs=dict(id='id', pid='process_id'), 
+                    anchor_attrs={'id': 'warning'})

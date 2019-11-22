@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block table_content %}
+
+<h1 id="view-title">Actores Participantes</h1>
+<hr>
+<a href="{{ url_for('register_participant_actor', pid=pid) }}">
+    <button type="button" class="btn btn-primary btn-sm my-button">Agregar Actor Participante</button>
+</a>
+{{ table }}
+
+{% endblock %}

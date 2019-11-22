@@ -68,3 +68,11 @@ class Tool(db.Model):
     def __repr__(self):
         return '<Herramientas de los Grupos de Procesos {}>'.format(self.description)
 
+class ParticipantsActors(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    name =  db.Column(db.String(140))
+    lastname = db.Column(db.String(140))
+    role = db.Column(db.String(64), default="Todos")
+    def __repr__(self):
+        return '<Actores Participantes de los Grupos de Procesos {}>'.format(self.description)

@@ -1,11 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
 from appi import app, db
 from flask_login import current_user, login_user, logout_user, login_required
-from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, Tec, Tool
+from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, Tec, Tool, ParticipantsActors
 from werkzeug.urls import url_parse
 from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
-                         EditFormDPGPAS, EditFormDSPGPGC, EditFormTec, EditFormTool, RegistrationFormTec, RegistrationFormTool
-from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, Tools_Table, Tec_Table
+                         EditFormDPGPAS, EditFormDSPGPGC, EditFormTec, EditFormTool, RegistrationFormTec, RegistrationFormTool, RegistrationFormActor
+from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, Tools_Table, Tec_Table, Participants_Actors_Table
 
 @app.route('/')
 @app.route('/index')
@@ -507,6 +507,91 @@ def delete_Tool(pid, id):
 
     else:
         flash('Not such discipline!');
+
+    query = ProcessGroup.query.all()
+    return render_template('index.html', title='Home Page', processes=query)
+
+
+#Parcipants Actors Routes
+@app.route('/process_groups/<int:pid>/actors', methods=['GET', 'POST'])
+@login_required
+def show_participants_actors(pid):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+    query = ParticipantsActors.query.filter_by(process_id=pid)
+    table = Participants_Actors_Table(query)
+    table.border = True
+    query = ProcessGroup.query.all()
+
+    return render_template('participants_actors_list.html', title="Participants Actors List", table=table, processes=query, pid=pid)
+
+
+@app.route('/process_groups/<int:pid>/register_actor', methods=['GET', 'POST'])
+@login_required
+def register_participant_actor(pid):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+    form = RegistrationFormActor()
+    if form.validate_on_submit():
+        actor = ParticipantsActors(name=form.name.data,lastname=form.lastname.data,role=form.role.data)
+        actor.process_id = pid
+        db.session.add(actor)
+        db.session.commit()
+        flash('New Participant Actor added')
+        return redirect(url_for('show_participants_actors', pid=pid))
+    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Actor Participante", processes=query)
+
+@app.route('/process_groups/<int:pid>/edit_actor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_participant_actor(pid, id):
+    query = ParticipantsActors.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    actor = ParticipantsActors.query.filter_by(id=id).first()
+
+    if actor:
+        form = RegistrationFormActor(formdata=request.form, obj=actor)
+        if form.validate_on_submit():
+            # save edits
+            actor.name = form.name.data
+            actor.lastname = form.lastname.data
+            actor.role = form.role.data
+            db.session.commit()
+            flash('Actor updated successfully!')
+            return redirect(url_for('show_participants_actors', pid=pid))
+
+        query = ProcessGroup.query.all()
+        return render_template('edit_actor.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/process_groups/<int:pid>/delete_actor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_participant_actor(pid, id):
+    query = ParticipantsActors.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    actor = ParticipantsActors.query.filter_by(id=id).first()
+    if actor:
+        db.session.delete(actor)
+        db.session.commit()
+        flash('Actor deleted successfully')
+        return redirect(url_for('show_participants_actors', pid=pid))
+
+    else:
+        flash('Not such actor!');
 
     query = ProcessGroup.query.all()
     return render_template('index.html', title='Home Page', processes=query)

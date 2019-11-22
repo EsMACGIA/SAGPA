@@ -98,3 +98,14 @@ class RegistrationFormTool(FlaskForm):
 class EditFormTool(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Edit')
+
+#Participants Actors
+
+class RegistrationFormActor(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    lastname = StringField('Lastname',validators=[DataRequired()])
+    role = SelectField(
+        'Actor Role',
+        choices=[('Todos', 'Todos'), ('Gcia Agropecuaria', 'Gcia Agropecuaria'), ('Gcia Ganaderia', 'Gcia Ganaderia'), ('Gcia Agricola', 'Gcia Agricola')]
+    )
+    submit = SubmitField('Register')

@@ -54,3 +54,25 @@ class ProcessGroup(db.Model):
     def __repr__(self):
         return '<Grupos de Procesos para Gestionar la Configuración del Sistem {}>'.format(self.description)
 
+class Tec(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    description =  db.Column(db.String(140), unique=True)
+    def __repr__(self):
+        return '<Tecnicas de los Grupos de Procesos {}>'.format(self.description)
+
+class Tool(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    description =  db.Column(db.String(140), unique=True)
+    def __repr__(self):
+        return '<Herramientas de los Grupos de Procesos {}>'.format(self.description)
+
+class ParticipantsActors(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    name =  db.Column(db.String(140))
+    lastname = db.Column(db.String(140))
+    role = db.Column(db.String(64), default="Todos")
+    def __repr__(self):
+        return '<Actores Participantes de los Grupos de Procesos {}>'.format(self.description)

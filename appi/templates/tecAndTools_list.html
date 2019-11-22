@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block table_content %}
+
+<h1 id="view-title">Técnicas y Herramientas</h1>
+<hr>
+<h3 id="view-title">Técnicas</h3>
+<a href="{{ url_for('register_Tec', pid=pid) }}">
+    <button type="button" class="btn btn-primary btn-sm my-button">Agregar técnica</button>
+</a>
+{{ table }}
+<h3 id="view-title">Herramientas</h3>
+<a href="{{ url_for('register_Tool', pid=pid) }}">
+    <button type="button" class="btn btn-primary btn-sm my-button">Agregar herramienta</button>
+</a>
+{{ table1 }}
+
+{% endblock %}

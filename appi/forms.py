@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from appi.models import User, DPGPAS, DSPGPGC
+from appi.models import User, DPGPAS, DSPGPGC, Tec, Tool, ProcessGroup
 
 
 #Users Forms
@@ -77,3 +77,46 @@ class RegistrationFormProcessGroup(FlaskForm):
 class EditFormProcessGroup(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Edit')
+
+    def validate_description(self, description):
+        query = Tec.query.filter_by(description=description.data).first()
+        if query is not None:
+            raise ValidationError('Please use a different description.')
+#Tec forms 
+class RegistrationFormTec(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Register')
+
+    def validate_description(self, description):
+        query = Tec.query.filter_by(description=description.data).first()
+        if query is not None:
+            raise ValidationError('Please use a different description.')
+
+class EditFormTec(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Edit')
+
+#Tool form
+class RegistrationFormTool(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Register')
+
+    def validate_description(self, description):
+        query = ProcessGroup.query.filter_by(description=description.data).first()
+        if query is not None:
+            raise ValidationError('Please use a different description.')
+
+class EditFormTool(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Edit')
+
+#Participants Actors
+
+class RegistrationFormActor(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    lastname = StringField('Lastname',validators=[DataRequired()])
+    role = SelectField(
+        'Actor Role',
+        choices=[('Todos', 'Todos'), ('Gcia Agropecuaria', 'Gcia Agropecuaria'), ('Gcia Ganaderia', 'Gcia Ganaderia'), ('Gcia Agricola', 'Gcia Agricola')]
+    )
+    submit = SubmitField('Register')

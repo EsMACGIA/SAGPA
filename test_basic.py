@@ -5,7 +5,7 @@ import unittest
 
 from appi import app, db
 
-TEST_DB = 'test.db'
+TEST_DB = 'app.db'
 
 class BasicTests(unittest.TestCase):
 
@@ -78,6 +78,21 @@ class BasicTests(unittest.TestCase):
     response = self.app.get('/show_DSPGPGC', follow_redirects = True)
     self.assertEqual(response.status_code, 200)
 
+  def test_show_process_group_page(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.get('/process_groups', follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+    
+  def test_show_tecAndTools_page(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.get('/process_groups/1/tecAndTools', follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_show_participants_actors_page(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.get('/process_groups/1/actors', follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
   def test_register_users(self):
     response = self.login('mfaria', '12345678')
     response = self.app.post(
@@ -102,6 +117,38 @@ class BasicTests(unittest.TestCase):
       follow_redirects = True)
     self.assertEqual(response.status_code, 200)
 
+  def test_register_process_group(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/register_process_group',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_register_Tec(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/register_Tec',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_register_Tool(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/register_Tool',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_register_participants_actors(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/register_actor',
+      data = dict(name='Nombre', lastname='Apellido', role='Todos'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+    
   def test_edit_users(self):
     response = self.login('mfaria', '12345678')
     response = self.app.post(
@@ -126,6 +173,38 @@ class BasicTests(unittest.TestCase):
       follow_redirects = True)
     self.assertEqual(response.status_code, 200)
 
+  def test_edit_process_group(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/edit_process_group/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_edit_Tec(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/edit_Tec/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_edit_Tool(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/edit_Tool/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_edit_participants_actors(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/edit_actor/1',
+      data = dict(name='Nombre', lastname='Apellido', role='Todos'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+    
   def test_delete_users(self):
     response = self.login('mfaria', '12345678')
     response = self.app.post(
@@ -150,5 +229,37 @@ class BasicTests(unittest.TestCase):
       follow_redirects = True)
     self.assertEqual(response.status_code, 200)
 
+  def test_delete_process_group(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      'delete_process_group/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_delete_Tec(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/delete_Tec/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_delete_Tool(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/delete_Tool/1',
+      data = dict(description='Mi Disciplina'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+
+  def test_delete_participants_actors(self):
+    response = self.login('mfaria', '12345678')
+    response = self.app.post(
+      '/process_groups/1/delete_actor/1',
+      data = dict(name='Nombre', lastname='Apellido', role='Todos'), 
+      follow_redirects = True)
+    self.assertEqual(response.status_code, 200)
+    
 if __name__ == "__main__":
   unittest.main()

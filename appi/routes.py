@@ -508,3 +508,338 @@ def delete_DSPGPGC_workflow():
         flash('Not such discipline!');
     return redirect('/workflow/' + pid)
 
+@app.route('/register_process_group', methods=['GET', 'POST'])
+@login_required
+def register_process_group():
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+    form = RegistrationFormProcessGroup()
+    if form.validate_on_submit():
+        process_group = ProcessGroup(description=form.description.data)
+       
+        db.session.add(process_group)
+        db.session.commit()
+        flash('New Process Group added')
+        return redirect(url_for('show_process_groups'))
+    query = ProcessGroup.query.all()
+    return render_template('register_process_groups.html', title='Register Process Group', form=form,  process_group="Grupo de Proceso", processes=query)
+
+@app.route('/edit_process_group/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_process_group(id):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+
+    process_group = ProcessGroup.query.filter_by(id=id).first()
+
+    if process_group:
+        form = EditFormProcessGroup(formdata=request.form, obj=process_group)
+        if form.validate_on_submit():
+
+            new_description = form.description.data
+            # check for errors with new names being in use
+
+            used_description = ProcessGroup.query.filter_by(description=new_description).first()
+
+            # if exists a different user using the same username
+            if used_description:
+                if used_description.id != id:
+                    form.description.errors.append('Please use a different description.')
+                    return render_template('edit_process_group.html', form=form)
+           
+            # save edits
+            process_group.description = new_description
+            db.session.commit()
+            flash('Process Group updated successfully!')
+            return redirect(url_for('show_process_groups'))
+
+        return render_template('edit_process_group.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/delete_process_group/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_process_group(id):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+
+    process_group = ProcessGroup.query.filter_by(id=id).first()
+    if process_group:
+        db.session.delete(process_group)
+        db.session.commit()
+        flash('Discipline deleted successfully')
+        return redirect(url_for('show_process_groups'))
+
+    else:
+        flash('Not such discipline!')
+
+#TecAndTools Routes
+@app.route('/process_groups/<int:pid>/tecAndTools', methods=['GET', 'POST'])
+@login_required
+def show_tecAndTools(pid):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+    query1 = Tec.query.filter_by(process_id=pid)
+    table = Tec_Table(query1)
+    query2 = Tool.query.filter_by(process_id=pid)
+    table2 = Tools_Table(query2)
+    table.border = True
+    table2.border = True
+
+    query = ProcessGroup.query.all()
+
+    return render_template('tecAndTools_list.html', title="TecAndTools List", table=table, table1=table2, processes=query, pid=pid)
+
+#Tec Routes
+@app.route('/process_groups/<int:pid>/register_Tec', methods=['GET', 'POST'])
+@login_required
+def register_Tec(pid):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+    form = RegistrationFormTec()
+    if form.validate_on_submit():
+        discipline = Tec(description=form.description.data)
+        discipline.process_id = pid
+        db.session.add(discipline)
+        db.session.commit()
+        flash('New Tec added')
+        return redirect(url_for('show_tecAndTools', pid=pid))
+    return render_template('register_discipline.html', title='Register Tec', form=form,  discipline_type="Técnica", processes=query)
+
+@app.route('/process_groups/<int:pid>/edit_Tec/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_Tec(pid, id):
+    query = Tec.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = Tec.query.filter_by(id=id).first()
+
+    if discipline:
+        form = EditFormTec(formdata=request.form, obj=discipline)
+        if form.validate_on_submit():
+
+            new_description = form.description.data
+            # check for errors with new names being in use
+
+            used_description = Tec.query.filter_by(description=new_description).first()
+
+            # if exists a different user using the same username
+            if used_description:
+                if used_description.id != id:
+                    form.description.errors.append('Please use a different description.')
+                    return render_template('edit_Tec.html', form=form)
+           
+            # save edits
+            discipline.description = new_description
+            db.session.commit()
+            flash('Discipline updated successfully!')
+            return redirect(url_for('show_tecAndTools', pid=pid))
+
+        query = ProcessGroup.query.all()
+        return render_template('edit_Tec.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/process_groups/<int:pid>/delete_Tec/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_Tec(pid, id):
+    query = Tec.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = Tec.query.filter_by(id=id).first()
+    if discipline:
+        db.session.delete(discipline)
+        db.session.commit()
+        flash('Discipline deleted successfully');
+        return redirect(url_for('show_tecAndTools', pid=pid))
+
+    else:
+        flash('Not such discipline!');
+
+    query = ProcessGroup.query.all()
+    return render_template('index.html', title='Home Page', pid=pid, processes=query)
+
+#Tools Routes
+@app.route('/process_groups/<int:pid>/register_Tool', methods=['GET', 'POST'])
+@login_required
+def register_Tool(pid):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+    form = RegistrationFormTool()
+    if form.validate_on_submit():
+        discipline = Tool(description=form.description.data)
+        discipline.process_id = pid
+        db.session.add(discipline)
+        db.session.commit()
+        flash('New Tool added')
+        return redirect(url_for('show_tecAndTools', pid=pid))
+    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Herramienta", processes=query)
+
+@app.route('/process_groups/<int:pid>/edit_Tool/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_Tool(pid, id):
+    query = Tool.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = Tool.query.filter_by(id=id).first()
+
+    if discipline:
+        form = EditFormTool(formdata=request.form, obj=discipline)
+        if form.validate_on_submit():
+
+            new_description = form.description.data
+            # check for errors with new names being in use
+
+            used_description = Tool.query.filter_by(description=new_description).first()
+
+            # if exists a different user using the same username
+            if used_description:
+                if used_description.id != id:
+                    form.description.errors.append('Please use a different description.')
+                    return render_template('edit_Tool.html', form=form)
+           
+            # save edits
+            discipline.description = new_description
+            db.session.commit()
+            flash('Discipline updated successfully!')
+            return redirect(url_for('show_tecAndTools', pid=pid))
+
+        query = ProcessGroup.query.all()
+        return render_template('edit_Tool.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/process_groups/<int:pid>/delete_Tool/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_Tool(pid, id):
+    query = Tool.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = Tool.query.filter_by(id=id).first()
+    if discipline:
+        db.session.delete(discipline)
+        db.session.commit()
+        flash('Discipline deleted successfully');
+        return redirect(url_for('show_tecAndTools', pid=pid))
+
+    else:
+        flash('Not such discipline!');
+
+    query = ProcessGroup.query.all()
+    return render_template('index.html', title='Home Page', processes=query)
+
+
+#Parcipants Actors Routes
+@app.route('/process_groups/<int:pid>/actors', methods=['GET', 'POST'])
+@login_required
+def show_participants_actors(pid):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+    query = ParticipantsActors.query.filter_by(process_id=pid)
+    table = Participants_Actors_Table(query)
+    table.border = True
+    query = ProcessGroup.query.all()
+
+    return render_template('participants_actors_list.html', title="Participants Actors List", table=table, processes=query, pid=pid)
+
+
+@app.route('/process_groups/<int:pid>/register_actor', methods=['GET', 'POST'])
+@login_required
+def register_participant_actor(pid):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+    form = RegistrationFormActor()
+    if form.validate_on_submit():
+        actor = ParticipantsActors(name=form.name.data,lastname=form.lastname.data,role=form.role.data)
+        actor.process_id = pid
+        db.session.add(actor)
+        db.session.commit()
+        flash('New Participant Actor added')
+        return redirect(url_for('show_participants_actors', pid=pid))
+    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Actor Participante", processes=query)
+
+@app.route('/process_groups/<int:pid>/edit_actor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_participant_actor(pid, id):
+    query = ParticipantsActors.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    actor = ParticipantsActors.query.filter_by(id=id).first()
+
+    if actor:
+        form = RegistrationFormActor(formdata=request.form, obj=actor)
+        if form.validate_on_submit():
+            # save edits
+            actor.name = form.name.data
+            actor.lastname = form.lastname.data
+            actor.role = form.role.data
+            db.session.commit()
+            flash('Actor updated successfully!')
+            return redirect(url_for('show_participants_actors', pid=pid))
+
+        query = ProcessGroup.query.all()
+        return render_template('edit_actor.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/process_groups/<int:pid>/delete_actor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_participant_actor(pid, id):
+    query = ParticipantsActors.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    actor = ParticipantsActors.query.filter_by(id=id).first()
+    if actor:
+        db.session.delete(actor)
+        db.session.commit()
+        flash('Actor deleted successfully')
+        return redirect(url_for('show_participants_actors', pid=pid))
+
+    else:
+        flash('Not such actor!');
+
+    query = ProcessGroup.query.all()
+    return render_template('index.html', title='Home Page', processes=query)

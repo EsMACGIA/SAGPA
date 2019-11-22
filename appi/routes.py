@@ -1,11 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
 from appi import app, db
 from flask_login import current_user, login_user, logout_user, login_required
-from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup
+from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, ProcessGroupWithDPGPAS2, ProcessGroupWithDSPGPGC2
 from werkzeug.urls import url_parse
 from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
-                         EditFormDPGPAS, EditFormDSPGPGC
-from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table
+                         EditFormDPGPAS, EditFormDSPGPGC, RegistrationFormProcessGroupWithDPGPAS2, RegistrationFormProcessGroupWithDSPGPGC2
+from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, EnablingDisciplines_Table, SupportingDisciplines_Table
 
 @app.route('/')
 @app.route('/index')
@@ -216,14 +216,7 @@ def delete_DPGPAS(id):
         flash('You are not an Administrator');
         return render_template('index.html', title='Home Page')
 
-    discipline = DPGPAS.query.filter_by(id=id).first()
-    if discipline:
-        db.session.delete(discipline)
-        db.session.commit()
-        flash('Discipline deleted successfully');
-
-    else:
-        flash('Not such discipline!');
+    discipline = DPGPAS.query.filter_by(id=id)
 
     return render_template('index.html', title='Home Page', processes=query)
 
@@ -331,3 +324,187 @@ def show_process_groups():
     table = DSPGPGC_Table(query)
     table.border = True
     return render_template('process_groups_list.html', title="Grupo de Procesos", table=table, processes=query)
+
+@app.route('/workflow/<int:id>', methods=['GET'])
+@login_required
+def show_workflow(id):
+
+    print('Id: ', id)
+    processes = ProcessGroup.query.all()
+    process = ProcessGroup.query.filter_by(id=id).first()
+    query = (ProcessGroupWithDPGPAS2.query
+            .join(ProcessGroup, ProcessGroupWithDPGPAS2.process_id==ProcessGroup.id)
+            .join(DPGPAS, ProcessGroupWithDPGPAS2.dpgpas_id==DPGPAS.id))
+    enabling_disciplines = EnablingDisciplines_Table(query)
+    enabling_disciplines.border = True
+    query = (ProcessGroupWithDSPGPGC2.query
+        .join(ProcessGroup, ProcessGroupWithDSPGPGC2.process_id==ProcessGroup.id)
+        .join(DSPGPGC, ProcessGroupWithDSPGPGC2.dspgpgc_id==DSPGPGC.id))
+    supporting_disciplines = SupportingDisciplines_Table(query)
+    supporting_disciplines.border = True
+
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+    return render_template(
+             'workflow.html', 
+             title="Flujos de Trabajo", 
+             processes=processes,
+             process=process,
+             ed=enabling_disciplines,
+             sd=supporting_disciplines
+    )
+
+@app.route('/workflow/DPGPAS/<int:id>', methods=['GET', 'POST'])
+@login_required
+def registerDPGPASinWorkflow(id):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+
+    form = RegistrationFormProcessGroupWithDPGPAS2()
+    
+    if form.validate_on_submit():
+        obj = ProcessGroupWithDPGPAS2(process_id=id, dpgpas_id=form.discipline_id.data.id, description=form.description.data)
+        db.session.add(obj)
+        db.session.commit()
+        flash('Nueva disciplina añadida')
+        return redirect(url_for('show_workflow', id=id))
+    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Actor Participante", processes=query)
+
+
+@app.route('/edit_workflow/DPGPAS', methods=['GET', 'POST'])
+@login_required
+def edit_DPGPAS_workflow():
+    query = ProcessGroup.query.all()
+
+    id = request.args.get('id')
+    pid = request.args.get('pid')
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+        # print('PId: ', pid)
+
+    discipline = ProcessGroupWithDPGPAS2.query.filter_by(id=id).first()
+
+    if discipline:
+        print('Hola')
+        form = RegistrationFormProcessGroupWithDPGPAS2(formdata=request.form, obj=discipline)
+        if form.validate_on_submit():
+
+            new_description = form.description.data
+            # check for errors with new names being in use
+       
+            # save edits
+            discipline.description = new_description
+            db.session.commit()
+            flash('Discipline updated successfully!')
+            return redirect('/workflow/' + pid)
+        return render_template('register_discipline.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/delete_workflow/DPGPAS', methods=['GET', 'POST'])
+@login_required
+def delete_DPGPAS_workflow():
+    query = ProcessGroup.query.all()
+
+    id = request.args.get('id')
+    pid = request.args.get('pid')
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = ProcessGroupWithDPGPAS2.query.filter_by(id=id).first()
+    if discipline:
+        db.session.delete(discipline)
+        db.session.commit()
+        flash('Discipline deleted successfully');
+
+    else:
+        flash('Not such discipline!');
+    return redirect('/workflow/' + pid)
+
+@app.route('/workflow/DSPGPGC/<int:id>', methods=['GET', 'POST'])
+@login_required
+def registerDSPGPGCinWorkflow(id):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+
+    form = RegistrationFormProcessGroupWithDSPGPGC2()
+    
+    if form.validate_on_submit():
+        obj = ProcessGroupWithDSPGPGC2(process_id=id, dspgpgc_id=form.discipline_id.data.id, description=form.description.data)
+        db.session.add(obj)
+        db.session.commit()
+        flash('Nueva disciplina añadida')
+        return redirect(url_for('show_workflow', id=id))
+    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Actor Participante", processes=query)
+
+
+@app.route('/edit_workflow/DSPGPGC', methods=['GET', 'POST'])
+@login_required
+def edit_DSPGPGC_workflow():
+    query = ProcessGroup.query.all()
+
+    id = request.args.get('id')
+    pid = request.args.get('pid')
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+        # print('PId: ', pid)
+
+    discipline = ProcessGroupWithDSPGPGC2.query.filter_by(id=id).first()
+
+    if discipline:
+        print('Hola')
+        form = RegistrationFormProcessGroupWithDSPGPGC2(formdata=request.form, obj=discipline)
+        if form.validate_on_submit():
+
+            new_description = form.description.data
+            # check for errors with new names being in use
+       
+            # save edits
+            discipline.description = new_description
+            db.session.commit()
+            flash('Discipline updated successfully!')
+            return redirect('/workflow/' + pid)
+        return render_template('register_discipline.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/delete_workflow/DSPGPGC', methods=['GET', 'POST'])
+@login_required
+def delete_DSPGPGC_workflow():
+    query = ProcessGroup.query.all()
+
+    id = request.args.get('id')
+    pid = request.args.get('pid')
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = ProcessGroupWithDSPGPGC2.query.filter_by(id=id).first()
+    if discipline:
+        db.session.delete(discipline)
+        db.session.commit()
+        flash('Discipline deleted successfully');
+
+    else:
+        flash('Not such discipline!');
+    return redirect('/workflow/' + pid)
+

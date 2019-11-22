@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block workflow %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div id="div-form-table" style="margin-bottom: 15px;">
+        <h1 class="text-center">Grupos de Proceso de {{ process.description }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+        <div id="div-form-table" style="margin-bottom: 15px;">
+          <h1 class="text-center" >Flujos de Trabajo</h1>
+        </div>
+      </div>
+    </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="div-form-table" style="margin-bottom: 15px;">
+        <h1 class="text-center">Disciplinas Habilitadoras</h1>
+        <a href="{{ url_for('registerDPGPASinWorkflow', id=process.id) }}">
+          <button type="button" class="btn btn-primary btn-sm my-button">Agregar técnica</button>
+        </a>
+        {{ ed }}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" style="margin-bottom: 15px;">
+      <div id="div-form-table">
+        <h1 class="text-center">Disciplinas de Soporte</h1>
+        <a href="{{ url_for('registerDSPGPGCinWorkflow', id=process.id) }}">
+          <button type="button" class="btn btn-primary btn-sm my-button">Agregar técnica</button>
+        </a>
+        {{ sd }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

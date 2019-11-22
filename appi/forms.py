@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from appi.models import User, DPGPAS, DSPGPGC
-
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 
 #Users Forms
 
@@ -70,5 +70,14 @@ class EditFormDSPGPGC(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Edit')
 
+# ProcessGroupWithDPGPAS2 form
+class RegistrationFormProcessGroupWithDPGPAS2(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    discipline_id = QuerySelectField(query_factory=lambda: DPGPAS.query.all())
+    submit = SubmitField('Register')
 
-
+# ProcessGroupWithDPGPAS2 form
+class RegistrationFormProcessGroupWithDSPGPGC2(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    discipline_id = QuerySelectField(query_factory=lambda: DSPGPGC.query.all())
+    submit = SubmitField('Register')

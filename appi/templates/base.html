@@ -1,92 +1,88 @@
-
+{% extends "bootstrap/base.html" %}   
+{% block head %}
     
-    
-    {% extends "bootstrap/base.html" %}   
-    {% block head %}
-     
-        {{ super() }}
-        {% if title %}
-        <title>{{ title }}</title>
-        {% else %}
-        <title></title>
-        {% endif %}
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    {% endblock %}
-    
+    {{ super() }}
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title></title>
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+{% endblock %}
 
-    {% block navbar %}
-        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(211,211,211);">
-        <a class="navbar-brand" href="#">USB</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link"  href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-                {% if current_user.is_anonymous %}
-                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                {% else %}
-                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-                {% endif %}
-            </li>
-            <li class="nav-item dropdown">
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider"></div>
-                <li class="dropdown-submenu dropdown-item">
-                  <a  class="dropdown-item" tabindex="-1" href="#">Configuración</a>
-                  <ul class="dropdown-menu">
-                    <li class="dropdown-item">
-                        <a href="{{ url_for('show_users') }}">Perfiles de Usuarios</a>
-                    </li>
-                    <li class="dropdown-item">
-                        <a href="{{ url_for('show_DPGPAS') }}">Disciplinas del Proceso</a>
-                    </li>
-                    <li class="dropdown-item">
-                        <a href="{{ url_for('show_DSPGPGC') }}">Disciplinas de Soporte</a>
-                    </li>
-                    <li class="dropdown-submenu">
-                      <a class="dropdown-item" href="{{ url_for('show_process_groups') }}">Grupos de Procesos</a>
-                      <ul class="dropdown-menu">
-                            {% for process in processes %}
-                            <li class="dropdown-submenu"><a class="dropdown-item" href="{{ url_for('show_process_groups') }}">{{ process.description }}</a>
-                                <ul class="dropdown-menu">
-                                    <li class="dropdown-item"><a href="#">Técnicas y Herramientas</a></li>
-                                    <li class="dropdown-item"><a href="#">Actores Participantes</a></li>
-                                </ul>
-                            </li>
-                            {% endfor %}
-                      </ul>
-                    </li>
-                  </ul>
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(211,211,211);">
+    <a class="navbar-brand" href="#">USB</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link"  href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+            {% if current_user.is_anonymous %}
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            {% else %}
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+        </li>
+        <li class="nav-item dropdown">
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <li class="dropdown-submenu dropdown-item">
+                <a  class="dropdown-item" tabindex="-1" href="#">Configuración</a>
+                <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    <a href="{{ url_for('show_users') }}">Perfiles de Usuarios</a>
                 </li>
-                </div>
+                <li class="dropdown-item">
+                    <a href="{{ url_for('show_DPGPAS') }}">Disciplinas del Proceso</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="{{ url_for('show_DSPGPGC') }}">Disciplinas de Soporte</a>
+                </li>
+                <li class="dropdown-submenu">
+                    <a class="dropdown-item" href="{{ url_for('show_process_groups') }}">Grupos de Procesos</a>
+                    <ul class="dropdown-menu">
+                        {% for process in processes %}
+                        <li class="dropdown-submenu"><a class="dropdown-item" href="{{ url_for('show_workflow', id=process.id) }}">{{ process.description }}</a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item"><a href="#">Técnicas y Herramientas</a></li>
+                                <li class="dropdown-item"><a href="#">Actores Participantes</a></li>
+                            </ul>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                </ul>
             </li>
-            </ul>
+            </div>
+        </li>
+        </ul>
+    </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="my-margin"></div>
+    {% if table is defined %}
+        <div id="div-form-table">
+            {% block table_content %}{% endblock %}
         </div>
-        </nav>
-    {% endblock %}
+    {% elif process is defined %}
+        {% block workflow %}{% endblock %}
+    {% else %}
+        {% block app_content %}{% endblock %}
+    {% endif %}
 
-    {% block content %}
-    <body>
-        <div class="my-margin"></div>
-        {% if table is defined %}
-            <div id="div-form-table">
-                {% block table_content %}{% endblock %}
-            </div>
-        {% else %}
-            <div id="div-form">
-                {% block app_content %}{% endblock %}
-            </div>
-        {% endif %}
+</body>
 
-    </body>
-    
-    {% endblock %}
-
+{% endblock %}

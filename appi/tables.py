@@ -30,11 +30,30 @@ class DSPGPGC_Table(Table):
                     anchor_attrs={'id': 'warning'})
     
 class ProcessGroup_Table(Table):
-
     classes = ["table table-hover"]
     id = Col('Id', show=False)
     description = Col('Description')
     edit = LinkCol('Edit', 'edit_DSPGPGC', url_kwargs=dict(id='id'))
     delete = LinkCol('Delete', 'delete_DSPGPGC', url_kwargs=dict(id='id'), 
+                    anchor_attrs={'id': 'warning'})
+
+class EnablingDisciplines_Table(Table):
+    classes = ["table table-hover"]
+    id = Col('Id', show=False)
+    description = Col('Description')
+    dpgpas_id = Col('Disciplina')
+    process_id = Col('No', show=False)
+    edit = LinkCol('Edit', 'edit_DPGPAS_workflow', url_kwargs=dict(id='id', pid='process_id'))
+    delete = LinkCol('Delete', 'delete_DPGPAS_workflow', url_kwargs=dict(id='id', pid='process_id'), 
+                    anchor_attrs={'id': 'warning'})
+
+class SupportingDisciplines_Table(Table):
+    classes = ["table table-hover"]
+    id = Col('Id', show=False)
+    description = Col('Description')
+    dspgpgc_id = Col('Disciplina')
+    process_id = Col('No', show=False)
+    edit = LinkCol('Edit', 'edit_DSPGPGC_workflow', url_kwargs=dict(id='id', pid='process_id'))
+    delete = LinkCol('Delete', 'delete_DSPGPGC_workflow', url_kwargs=dict(id='id', pid='process_id'), 
                     anchor_attrs={'id': 'warning'})
    

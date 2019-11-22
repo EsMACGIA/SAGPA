@@ -57,7 +57,7 @@
                             {% for process in processes %}
                             <li class="dropdown-submenu"><a class="dropdown-item" href="{{ url_for('show_process_groups') }}">{{ process.description }}</a>
                                 <ul class="dropdown-menu">
-                                    <li class="dropdown-item"><a href="#">Técnicas y Herramientas</a></li>
+                                    <li class="dropdown-item"><a href="{{ url_for('show_tecAndTools', pid=process.id)}}">Técnicas y Herramientas</a></li>
                                     <li class="dropdown-item"><a href="#">Actores Participantes</a></li>
                                 </ul>
                             </li>

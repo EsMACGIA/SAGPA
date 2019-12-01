@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: b621966caae9
-Revises: 8d5b75e5fa5b
-Create Date: 2019-11-22 05:09:25.459276
+Revision ID: 80fc62767510
+Revises: 
+Create Date: 2019-12-01 16:27:23.431309
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b621966caae9'
-down_revision = '8d5b75e5fa5b'
+revision = '80fc62767510'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -31,6 +31,12 @@ def upgrade():
     sa.UniqueConstraint('description')
     )
     op.create_table('process_group',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('description', sa.String(length=140), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('description')
+    )
+    op.create_table('project',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=140), nullable=True),
     sa.PrimaryKeyConstraint('id'),
@@ -115,6 +121,7 @@ def downgrade():
     op.drop_index(op.f('ix_user_username'), table_name='user')
     op.drop_index(op.f('ix_user_email'), table_name='user')
     op.drop_table('user')
+    op.drop_table('project')
     op.drop_table('process_group')
     op.drop_table('DSPGPGC')
     op.drop_table('DPGPAS')

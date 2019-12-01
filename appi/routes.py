@@ -874,7 +874,7 @@ def register_project():
         db.session.add(discipline)
         db.session.commit()
         flash('Nuevo Proyecto agregado')
-        return redirect(url_for('index'))
+        return redirect(url_for('show_project'))
     return render_template('register_discipline.html', title='Register project', form=form,  discipline_type="Proyecto", processes=query)
 
 
@@ -922,7 +922,7 @@ def edit_project(id):
             discipline.description = new_description
             db.session.commit()
             flash('Discipline updated successfully!')
-            return redirect('/')
+            return redirect(url_for('show_project'))
 
         return render_template('edit_project.html', form=form, processes=query)
     else:
@@ -943,6 +943,7 @@ def delete_project(id):
         db.session.delete(discipline)
         db.session.commit()
         flash('Project deleted successfully');
+        return redirect(url_for('show_project'))
 
     else:
         flash('Not such discipline!');

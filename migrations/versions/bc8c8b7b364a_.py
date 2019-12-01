@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: b621966caae9
-Revises: 8d5b75e5fa5b
-Create Date: 2019-11-22 05:09:25.459276
+Revision ID: bc8c8b7b364a
+Revises: 
+Create Date: 2019-12-01 15:42:19.238854
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b621966caae9'
-down_revision = '8d5b75e5fa5b'
+revision = 'bc8c8b7b364a'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -44,8 +44,6 @@ def upgrade():
     sa.Column('rank', sa.String(length=64), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
-    op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=True)
     op.create_table('participants_actors',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('process_id', sa.Integer(), nullable=True),
@@ -112,8 +110,6 @@ def downgrade():
     op.drop_index(op.f('ix_post_timestamp'), table_name='post')
     op.drop_table('post')
     op.drop_table('participants_actors')
-    op.drop_index(op.f('ix_user_username'), table_name='user')
-    op.drop_index(op.f('ix_user_email'), table_name='user')
     op.drop_table('user')
     op.drop_table('process_group')
     op.drop_table('DSPGPGC')

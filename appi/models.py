@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     rank = db.Column(db.String(64), default="General")
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -96,4 +97,4 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description =  db.Column(db.String(140), unique=True)
     def __repr__(self):
-        return '<Proyectos para el sistema {}>'.format(self.description)
+        return '{}'.format(self.description)

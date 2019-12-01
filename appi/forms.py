@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from appi.models import User, DPGPAS, DSPGPGC, Tec, Tool, ProcessGroup
+from appi.models import User, DPGPAS, DSPGPGC, Tec, Tool, ProcessGroup, Project
 
 
 #Users Forms
@@ -39,6 +39,7 @@ class EditForm(FlaskForm):
         'User Rank',
         choices=[('General', 'General'), ('Administrator', 'Administrador'), ('Manager', 'Gerente')]
     )
+    project_id = QuerySelectField('Proyecto', query_factory=lambda: Project.query.all(), default=None)
     submit = SubmitField('Edit')
 
 #DPGPAS forms 

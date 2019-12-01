@@ -6,8 +6,8 @@ from appi import login
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
+    username = db.Column(db.String(64))
+    email = db.Column(db.String(120))
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     rank = db.Column(db.String(64), default="General")
@@ -39,25 +39,25 @@ class Post(db.Model):
 
 class DPGPAS(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description =  db.Column(db.String(140), unique=True)
+    description =  db.Column(db.String(140))
     def __repr__(self):
         return '{}'.format(self.description)
 
 class DSPGPGC(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description =  db.Column(db.String(140), unique=True)
+    description =  db.Column(db.String(140))
     def __repr__(self):
         return '{}'.format(self.description)
 
 class ProcessGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description =  db.Column(db.String(140), unique=True)
+    description =  db.Column(db.String(140))
     def __repr__(self):
         return '<Grupos de Procesos para Gestionar la Configuración del Sistem {}>'.format(self.description)
 
 class ProcessGroupWithDPGPAS2(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(140), unique=True)
+    description = db.Column(db.String(140))
     process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
     dpgpas_id = db.Column(db.Integer, db.ForeignKey('DPGPAS.id'))
     def __repr__(self):
@@ -65,7 +65,7 @@ class ProcessGroupWithDPGPAS2(db.Model):
 
 class ProcessGroupWithDSPGPGC2(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(140), unique=True)
+    description = db.Column(db.String(140))
     process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
     dspgpgc_id = db.Column(db.Integer, db.ForeignKey('DSPGPGC.id'))
     def __repr__(self):
@@ -73,14 +73,14 @@ class ProcessGroupWithDSPGPGC2(db.Model):
 class Tec(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
-    description =  db.Column(db.String(140), unique=True)
+    description =  db.Column(db.String(140))
     def __repr__(self):
         return '<Tecnicas de los Grupos de Procesos {}>'.format(self.description)
 
 class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
-    description =  db.Column(db.String(140), unique=True)
+    description =  db.Column(db.String(140))
     def __repr__(self):
         return '<Herramientas de los Grupos de Procesos {}>'.format(self.description)
 

@@ -22,15 +22,6 @@ class RegistrationForm(FlaskForm):
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different username.')
-
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different email address.')
 
 class EditForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -47,10 +38,6 @@ class RegistrationFormDPGPAS(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Register')
 
-    def validate_description(self, description):
-        query = DPGPAS.query.filter_by(description=description.data).first()
-        if query is not None:
-            raise ValidationError('Please use a different description.')
 
 class EditFormDPGPAS(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
@@ -63,10 +50,6 @@ class RegistrationFormDSPGPGC(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Register')
 
-    def validate_description(self, description):
-        query = DSPGPGC.query.filter_by(description=description.data).first()
-        if query is not None:
-            raise ValidationError('Please use a different description.')
 
 class EditFormDSPGPGC(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
@@ -91,19 +74,11 @@ class EditFormProcessGroup(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Edit')
 
-    def validate_description(self, description):
-        query = Tec.query.filter_by(description=description.data).first()
-        if query is not None:
-            raise ValidationError('Please use a different description.')
 #Tec forms 
 class RegistrationFormTec(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Register')
 
-    def validate_description(self, description):
-        query = Tec.query.filter_by(description=description.data).first()
-        if query is not None:
-            raise ValidationError('Please use a different description.')
 
 class EditFormTec(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
@@ -114,10 +89,6 @@ class RegistrationFormTool(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Register')
 
-    def validate_description(self, description):
-        query = ProcessGroup.query.filter_by(description=description.data).first()
-        if query is not None:
-            raise ValidationError('Please use a different description.')
 
 class EditFormTool(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])

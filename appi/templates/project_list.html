@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block table_content %}
+
+<h1 id="view-title">Proyectos</h1>
+<hr>
+<a href="{{ url_for('register_project') }}">
+  <button href="{{ url_for('register_project')}}" type="button" class="btn btn-primary btn-sm my-button">Agregar Proyecto</button>
+</a>
+{{ table }}
+
+{% endblock %}

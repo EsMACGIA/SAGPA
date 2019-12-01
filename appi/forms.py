@@ -132,3 +132,18 @@ class RegistrationFormActor(FlaskForm):
         choices=[('Todos', 'Todos'), ('Gcia Agropecuaria', 'Gcia Agropecuaria'), ('Gcia Ganaderia', 'Gcia Ganaderia'), ('Gcia Agricola', 'Gcia Agricola')]
     )
     submit = SubmitField('Register')
+
+#Project
+
+class RegistrationFormProject(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Register')
+
+    def validate_description(self, description):
+        query = DSPGPGC.query.filter_by(description=description.data).first()
+        if query is not None:
+            raise ValidationError('Please use a different description.')
+
+class EditFormProject(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Edit')

@@ -5,13 +5,15 @@ from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, ProcessGroupWithDPG
 from werkzeug.urls import url_parse
 from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
                          EditFormDPGPAS, EditFormDSPGPGC, RegistrationFormProcessGroupWithDPGPAS2, RegistrationFormProcessGroupWithDSPGPGC2
-from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, EnablingDisciplines_Table, SupportingDisciplines_Table
-from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, Tec, Tool, ParticipantsActors
+from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, EnablingDisciplines_Table, SupportingDisciplines_Table, \
+                        Project_Table
+from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, Tec, Tool, ParticipantsActors, Project
 from werkzeug.urls import url_parse
 from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
                          EditFormDPGPAS, EditFormDSPGPGC, RegistrationFormProcessGroup, EditFormProcessGroup, \
-                         EditFormTec, EditFormTool, RegistrationFormTec, RegistrationFormTool, RegistrationFormActor
-from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, Tools_Table, Tec_Table, Participants_Actors_Table
+                         EditFormTec, EditFormTool, RegistrationFormTec, RegistrationFormTool, RegistrationFormActor, \
+                         EditFormProject, RegistrationFormProject
+from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, Tools_Table, Tec_Table, Participants_Actors_Table, Project_Table
 
 @app.route('/')
 @app.route('/index')
@@ -853,4 +855,96 @@ def delete_participant_actor(pid, id):
         flash('Not such actor!');
 
     query = ProcessGroup.query.all()
+    return render_template('index.html', title='Home Page', processes=query)
+
+# Project Routes
+
+@app.route('/register_project', methods=['GET', 'POST'])
+@login_required
+def register_project():
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+    form = RegistrationFormProject()
+    if form.validate_on_submit():
+        discipline = Project(description=form.description.data)
+       
+        db.session.add(discipline)
+        db.session.commit()
+        flash('Nuevo Proyecto agregado')
+        return redirect(url_for('index'))
+    return render_template('register_discipline.html', title='Register project', form=form,  discipline_type="Proyecto", processes=query)
+
+
+@app.route('/show_projects', methods=['GET', 'POST'])
+@login_required
+def show_project():
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+    query = Project.query.all()
+    table = Project_Table(query)
+    table.border = True
+    query = ProcessGroup.query.all()
+    return render_template('project_list.html', title="project List", table=table, processes=query)
+
+
+@app.route('/edit_project/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_project(id):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = Project.query.filter_by(id=id).first()
+
+    if discipline:
+        form = EditFormProject(formdata=request.form, obj=discipline)
+        if form.validate_on_submit():
+
+            new_description = form.description.data
+            # check for errors with new names being in use
+
+            used_description = Project.query.filter_by(description=new_description).first()
+
+            # if exists a different user using the same username
+            if used_description:
+                if used_description.id != id:
+                    form.description.errors.append('Please use a different description.')
+                    return render_template('edit_project.html', form=form)
+           
+            # save edits
+            discipline.description = new_description
+            db.session.commit()
+            flash('Discipline updated successfully!')
+            return redirect('/')
+
+        return render_template('edit_project.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/delete_project/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_project(id):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = Project.query.filter_by(id=id).first()
+    if discipline:
+        db.session.delete(discipline)
+        db.session.commit()
+        flash('Project deleted successfully');
+
+    else:
+        flash('Not such discipline!');
+
     return render_template('index.html', title='Home Page', processes=query)

@@ -91,3 +91,9 @@ class ParticipantsActors(db.Model):
     role = db.Column(db.String(64), default="Todos")
     def __repr__(self):
         return '<Actores Participantes de los Grupos de Procesos {}>'.format(self.description)
+
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description =  db.Column(db.String(140), unique=True)
+    def __repr__(self):
+        return '<Proyectos para el sistema {}>'.format(self.description)

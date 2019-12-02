@@ -95,6 +95,6 @@ class ParticipantsActors(db.Model):
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description =  db.Column(db.String(140), unique=True)
+    description =  db.Column(db.String(140))
     def __repr__(self):
         return '{}'.format(self.description)

@@ -2,13 +2,13 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <h1 id="view-title">Editar Proyecto</h1>
-    <hr>
     <div class="row">
-            <div class="col-6">
-                <div id="div-form-table">
-                    {{ wtf.quick_form(form) }}
-                </div>
+        <div class="col-6">
+            <div id="div-form-table">
+                <h1 id="view-title">Editar Proyecto</h1>
+                <hr>
+                {{ wtf.quick_form(form) }}
             </div>
+        </div>
     </div>
 {% endblock %}

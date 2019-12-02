@@ -74,6 +74,7 @@ def show_users():
 
         return render_template('index.html', title='Home Page'), 400
     query = User.query.all()
+    print('Query:', query[0].project_id)
     table = Users_Table(query)
     table.border = True
     query = ProcessGroup.query.all()
@@ -85,13 +86,12 @@ def show_users():
 @login_required
 def edit_user(id):
 
-    
- 
     if(current_user.rank != 'Administrator'):
         flash('You are not an Administrator');
         return render_template('index.html', title='Home Page')
 
     user = User.query.filter_by(id=id).first()
+    print(user.project_id)
 
     if user:
         form = EditForm(formdata=request.form, obj=user)
@@ -120,6 +120,8 @@ def edit_user(id):
             user.email = new_email
             user.username =  new_username
             user.rank = form.rank.data
+            # print(form.project_id.data.id)
+            user.project_id = form.project_id.data.id
             db.session.commit()
             flash('User updated successfully!')
             return redirect('/')
@@ -386,7 +388,7 @@ def registerDPGPASinWorkflow(id):
         db.session.commit()
         flash('Nueva disciplina añadida')
         return redirect(url_for('show_workflow', id=id))
-    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Actor Participante", processes=query)
+    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Disciplina Habilitadora", processes=query)
 
 
 @app.route('/edit_workflow/DPGPAS', methods=['GET', 'POST'])
@@ -462,7 +464,7 @@ def registerDSPGPGCinWorkflow(id):
         db.session.commit()
         flash('Nueva disciplina añadida')
         return redirect(url_for('show_workflow', id=id))
-    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Actor Participante", processes=query)
+    return render_template('register_discipline.html', title='Register Tool', form=form,  discipline_type="Diciplina de Soporte", processes=query)
 
 
 @app.route('/edit_workflow/DSPGPGC', methods=['GET', 'POST'])

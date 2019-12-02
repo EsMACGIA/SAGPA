@@ -20,7 +20,7 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
 
 class EditForm(FlaskForm):
@@ -31,68 +31,68 @@ class EditForm(FlaskForm):
         choices=[('General', 'General'), ('Administrator', 'Administrador'), ('Manager', 'Gerente')]
     )
     project_id = QuerySelectField('Proyecto', query_factory=lambda: Project.query.all(), default=None)
-    submit = SubmitField('Edit')
+    submit = SubmitField('Editar')
 
 #DPGPAS forms 
 class RegistrationFormDPGPAS(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
 
 class EditFormDPGPAS(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Edit')
+    submit = SubmitField('Editar')
 
 
 #DSPGPGC forms 
 
 class RegistrationFormDSPGPGC(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
 
 class EditFormDSPGPGC(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Edit')
+    submit = SubmitField('Editar')
 
 # ProcessGroupWithDPGPAS2 form
 class RegistrationFormProcessGroupWithDPGPAS2(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     discipline_id = QuerySelectField(query_factory=lambda: DPGPAS.query.all())
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
 # ProcessGroupWithDPGPAS2 form
 class RegistrationFormProcessGroupWithDSPGPGC2(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     discipline_id = QuerySelectField(query_factory=lambda: DSPGPGC.query.all())
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 class RegistrationFormProcessGroup(FlaskForm):
     description = StringField('Description',validators=[DataRequired()])
-    SubmitField = SubmitField('Register')
+    SubmitField = SubmitField('Registrar')
 
 class EditFormProcessGroup(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Edit')
+    submit = SubmitField('Editar')
 
 #Tec forms 
 class RegistrationFormTec(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
 
 class EditFormTec(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Edit')
+    submit = SubmitField('Editar')
 
 #Tool form
 class RegistrationFormTool(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
 
 class EditFormTool(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Edit')
+    submit = SubmitField('Editar')
 
 #Participants Actors
 
@@ -103,13 +103,13 @@ class RegistrationFormActor(FlaskForm):
         'Actor Role',
         choices=[('Todos', 'Todos'), ('Gcia Agropecuaria', 'Gcia Agropecuaria'), ('Gcia Ganaderia', 'Gcia Ganaderia'), ('Gcia Agricola', 'Gcia Agricola')]
     )
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
 #Project
 
 class RegistrationFormProject(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
     def validate_description(self, description):
         query = DSPGPGC.query.filter_by(description=description.data).first()
@@ -118,4 +118,4 @@ class RegistrationFormProject(FlaskForm):
 
 class EditFormProject(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Edit')
+    submit = SubmitField('Editar')

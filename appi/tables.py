@@ -4,9 +4,10 @@ class Users_Table(Table):
 
     classes = ["table table-hover"]
     id = Col('Id', show=False)
-    username = Col('Username')
+    username = Col('Usuario')
     email = Col('Email')
-    rank = Col('Rank')
+    rank = Col('Tipo')
+    project_id = Col('Proyecto')
     edit = LinkCol('Edit', 'edit_user', url_kwargs=dict(id='id'))
     delete = LinkCol('Delete', 'delete_user', url_kwargs=dict(id='id'), 
                     anchor_attrs={'id': 'warning'})

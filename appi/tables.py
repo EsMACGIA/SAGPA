@@ -106,6 +106,7 @@ class ActivityDPGPAS_Table(Table):
     description = Col('Description')
     dpgpas_id = Col('Disciplina')
     process_id = Col('No', show=False)
+    tasks = LinkCol('Tareas', 'show_DPGPAS_activities_tasks', url_kwargs=dict(did='id', pid='process_id',aid='id'))
     edit = LinkCol('Edit', 'edit_DPGPAS_activity', url_kwargs=dict(id='id', pid='process_id', did='dpgpas_id'))
     delete = LinkCol('Delete', 'delete_DPGPAS_activity', url_kwargs=dict(id='id', pid='process_id', did='dpgpas_id'), 
                     anchor_attrs={'id': 'warning'})
@@ -117,6 +118,33 @@ class ActivityDSPGPGC_Table(Table):
     description = Col('Description')
     dspgpgc_id = Col('Disciplina')
     process_id = Col('No', show=False)
+    tasks = LinkCol('Tareas', 'show_DSPGPGC_activities_tasks', url_kwargs=dict(did='id', pid='process_id',aid='id'))
     edit = LinkCol('Edit', 'edit_DSPGPGC_activity', url_kwargs=dict(id='id', pid='process_id', did='dspgpgc_id'))
     delete = LinkCol('Delete', 'delete_DSPGPGC_activity', url_kwargs=dict(id='id', pid='process_id', did='dspgpgc_id'), 
+                    anchor_attrs={'id': 'warning'})
+
+### Task Tables
+
+class TaskActivityDPGPAS_Table(Table):
+
+    classes = ["table table-hover"]
+    id = Col('Id', show=False)
+    description = Col('Description')
+    dpgpas_id = Col('Disciplina')
+    activity_id = Col('Actividad')
+    process_id = Col('No', show=False)
+    edit = LinkCol('Edit', 'edit_DPGPAS_activity_task', url_kwargs=dict(id='id', pid='process_id', did='dpgpas_id',aid='activity_id'))
+    delete = LinkCol('Delete', 'delete_DPGPAS_activity_task', url_kwargs=dict(id='id', pid='process_id', did='dpgpas_id',aid ='activity_id'), 
+                    anchor_attrs={'id': 'warning'})
+
+class TaskActivityDSPGPGC_Table(Table):
+
+    classes = ["table table-hover"]
+    id = Col('Id', show=False)
+    description = Col('Description')
+    dspgpgc_id = Col('Disciplina')
+    activity_id = Col('Actividad')
+    process_id = Col('No', show=False)
+    edit = LinkCol('Edit', 'edit_DSPGPGC_activity_task', url_kwargs=dict(id='id', pid='process_id', did='dspgpgc_id',aid='activity_id'))
+    delete = LinkCol('Delete', 'delete_DSPGPGC_activity_task', url_kwargs=dict(id='id', pid='process_id', did='dspgpgc_id',aid ='activity_id'), 
                     anchor_attrs={'id': 'warning'})

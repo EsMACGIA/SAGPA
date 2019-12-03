@@ -131,12 +131,32 @@ class EditFormDPGPASActivity(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Editar')
 
-# DPGPAS Activities
+# DSPGPGC Activities
 
 class RegistrationFormDSPGPGCActivity(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Registrar')
 
 class EditFormDSPGPGCActivity(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Editar')
+
+# Task DPGPAS Activities
+
+class RegistrationFormTaskDPGPASActivities(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Registrar')
+
+class EditFormTaskDPGPASActivities(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Editar')
+
+# Task DPGPAS Activities
+
+class RegistrationFormTaskDPGPASActivities(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Registrar')
+
+class EditFormTaskDSPGPGCActivities(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Editar')

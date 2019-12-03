@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block table_content %}
+
+<h1 id="view-title">Tareas</h1>
+<hr>
+<a href="{{ url_for('register_DPGPAS_activity_task', pid=pid, did=did, aid=aid) }}">
+    <button type="button" class="btn btn-primary btn-sm my-button">Agregar Tarea</button>
+</a>
+{{ table }}
+
+{% endblock %}

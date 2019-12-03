@@ -115,3 +115,23 @@ class ActivityDSPGPGC(db.Model):
     description =  db.Column(db.String(140))
     def __repr__(self):
         return '{}'.format(self.description)
+
+class TaskActivityDPGPAS(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    dpgpas_id = db.Column(db.Integer, db.ForeignKey('process_group_with_dpgpa_s2.id'))
+    activity_id = db.Column(db.Integer, db.ForeignKey('activityDPGPAS.id'))
+    description =  db.Column(db.String(140))
+    def __repr__(self):
+        return '{}'.format(self.description)
+
+
+class TaskActivityDSPGPGC(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    dspgpgc_id = db.Column(db.Integer, db.ForeignKey('process_group_with_dspgpg_c2.id'))
+    activity_id = db.Column(db.Integer, db.ForeignKey('activityDSPGPGC.id'))
+    description =  db.Column(db.String(140))
+    def __repr__(self):
+        return '{}'.format(self.description)
+

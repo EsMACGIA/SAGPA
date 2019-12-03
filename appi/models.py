@@ -70,6 +70,7 @@ class ProcessGroupWithDSPGPGC2(db.Model):
     dspgpgc_id = db.Column(db.Integer, db.ForeignKey('DSPGPGC.id'))
     def __repr__(self):
         return '<Relación n a n de DSPGPGC a ProcessGroup>'
+
 class Tec(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
@@ -95,6 +96,22 @@ class ParticipantsActors(db.Model):
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    description =  db.Column(db.String(140))
+    def __repr__(self):
+        return '{}'.format(self.description)
+
+class ActivityDPGPAS(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    dpgpas_id = db.Column(db.Integer, db.ForeignKey('process_group_with_dpgpa_s2.id'))
+    description =  db.Column(db.String(140))
+    def __repr__(self):
+        return '{}'.format(self.description)
+
+class ActivityDSPGPGC(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    process_id = db.Column(db.Integer, db.ForeignKey('process_group.id'))
+    dspgpgc_id = db.Column(db.Integer, db.ForeignKey('process_group_with_dspgpg_c2.id'))
     description =  db.Column(db.String(140))
     def __repr__(self):
         return '{}'.format(self.description)

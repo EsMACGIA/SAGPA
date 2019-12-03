@@ -66,6 +66,7 @@ class RegistrationFormProcessGroupWithDSPGPGC2(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     discipline_id = QuerySelectField(query_factory=lambda: DSPGPGC.query.all())
     submit = SubmitField('Registrar')
+    
 class RegistrationFormProcessGroup(FlaskForm):
     description = StringField('Description',validators=[DataRequired()])
     SubmitField = SubmitField('Registrar')
@@ -117,5 +118,25 @@ class RegistrationFormProject(FlaskForm):
             raise ValidationError('Please use a different description.')
 
 class EditFormProject(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Editar')
+
+# DPGPAS Activities
+
+class RegistrationFormDPGPASActivity(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Registrar')
+
+class EditFormDPGPASActivity(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Editar')
+
+# DPGPAS Activities
+
+class RegistrationFormDSPGPGCActivity(FlaskForm):
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Registrar')
+
+class EditFormDSPGPGCActivity(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Editar')

@@ -6,14 +6,16 @@ from werkzeug.urls import url_parse
 from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
                          EditFormDPGPAS, EditFormDSPGPGC, RegistrationFormProcessGroupWithDPGPAS2, RegistrationFormProcessGroupWithDSPGPGC2
 from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, EnablingDisciplines_Table, SupportingDisciplines_Table, \
-                        Project_Table
-from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, Tec, Tool, ParticipantsActors, Project
+                        Project_Table, ActivityDPGPAS_Table
+from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, Tec, Tool, ParticipantsActors, Project, ActivityDPGPAS, ActivityDSPGPGC
 from werkzeug.urls import url_parse
 from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDPGPAS, RegistrationFormDSPGPGC,\
                          EditFormDPGPAS, EditFormDSPGPGC, RegistrationFormProcessGroup, EditFormProcessGroup, \
                          EditFormTec, EditFormTool, RegistrationFormTec, RegistrationFormTool, RegistrationFormActor, \
-                         EditFormProject, RegistrationFormProject
-from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, Tools_Table, Tec_Table, Participants_Actors_Table, Project_Table
+                         EditFormProject, RegistrationFormProject, RegistrationFormDPGPASActivity, EditFormDPGPASActivity, \
+                         EditFormDSPGPGCActivity, RegistrationFormDSPGPGCActivity
+from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, Tools_Table, Tec_Table, Participants_Actors_Table, Project_Table, \
+                         ActivityDPGPAS_Table, ActivityDSPGPGC_Table
 
 @app.route('/')
 @app.route('/index')
@@ -950,4 +952,170 @@ def delete_project(id):
     else:
         flash('Not such discipline!');
 
+    return render_template('index.html', title='Home Page', processes=query)
+
+# Actividades DPGPAS
+
+@app.route('/workflow/<int:pid>/<int:did>/DPGAS_activities', methods=['GET', 'POST'])
+@login_required
+def show_DPGPAS_activities(pid, did):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+
+    query = ActivityDPGPAS.query.filter_by(process_id=pid, dpgpas_id=did)
+    table = ActivityDPGPAS_Table(query)
+    table.border = True
+    query = ProcessGroup.query.all()
+
+    return render_template('activityDPGPAS_list.html', title="activity List", table=table, processes=query, pid=pid, did=did)
+
+@app.route('/workflow/<int:pid>/<int:did>/register_DPGPAS_activity', methods=['GET', 'POST'])
+@login_required
+def register_DPGPAS_activity(pid, did):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+    
+    form = RegistrationFormDPGPASActivity()
+    if form.validate_on_submit():
+        discipline = ActivityDPGPAS(description=form.description.data)
+        discipline.process_id = pid
+        discipline.dpgpas_id = did
+        db.session.add(discipline)
+        db.session.commit()
+        flash('New Activity added')
+        return redirect(url_for('show_DPGPAS_activities', pid=pid, did=did))
+    return render_template('register_discipline.html', title='Register Activity', form=form,  discipline_type="Actividad", processes=query)
+
+@app.route('/workflow/<int:pid>/<int:did>/edit_DPGPAS_activity/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_DPGPAS_activity(pid, did, id):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = ActivityDPGPAS.query.filter_by(id=id).first()
+
+    if discipline:
+        form = EditFormDPGPASActivity(formdata=request.form, obj=discipline)
+        if form.validate_on_submit():
+            # save edits
+            discipline.description = form.description.data
+            db.session.commit()
+            flash('Activity updated successfully!')
+            return redirect(url_for('show_DPGPAS_activities', pid=pid, did=did))
+
+        query = ProcessGroup.query.all()
+        return render_template('edit_DPGPAS_activity.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/workflow/<int:pid>/<int:did>/delete_DPGPAS_activity/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_DPGPAS_activity(pid, did, id):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+
+    discipline = ActivityDPGPAS.query.filter_by(id=id).first()
+    if discipline:
+        db.session.delete(discipline)
+        db.session.commit()
+        flash('Actor deleted successfully')
+        return redirect(url_for('show_DPGPAS_activities', pid=pid, did=did))
+
+    else:
+        flash('Not such activity!')
+
+    query = ProcessGroup.query.all()
+    return render_template('index.html', title='Home Page', processes=query)
+
+# Actividades DSPGPGC
+
+@app.route('/workflow/<int:pid>/<int:did>/DSPGPGC_activities', methods=['GET', 'POST'])
+@login_required
+def show_DSPGPGC_activities(pid, did):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+
+    query = ActivityDSPGPGC.query.filter_by(process_id=pid, dspgpgc_id=did)
+    table = ActivityDSPGPGC_Table(query)
+    table.border = True
+    query = ProcessGroup.query.all()
+
+    return render_template('activityDSPGPGC_list.html', title="Activity List", table=table, processes=query, pid=pid, did=did)
+
+@app.route('/workflow/<int:pid>/<int:did>/register_DSPGPGC_activity', methods=['GET', 'POST'])
+@login_required
+def register_DSPGPGC_activity(pid, did):
+    query = ProcessGroup.query.all()
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+    
+    form = RegistrationFormDSPGPGCActivity()
+    if form.validate_on_submit():
+        discipline = ActivityDSPGPGC(description=form.description.data)
+        discipline.process_id = pid
+        discipline.dspgpgc_id = did
+        db.session.add(discipline)
+        db.session.commit()
+        flash('New Activity added')
+        return redirect(url_for('show_DSPGPGC_activities', pid=pid, did=did))
+    return render_template('register_discipline.html', title='Register Activity', form=form,  discipline_type="Actividad", processes=query)
+
+@app.route('/workflow/<int:pid>/<int:did>/edit_DSPGPGC_activity/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_DSPGPGC_activity(pid, did, id):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator');
+        return render_template('index.html', title='Home Page')
+
+    discipline = ActivityDSPGPGC.query.filter_by(id=id).first()
+
+    if discipline:
+        form = EditFormDSPGPGCActivity(formdata=request.form, obj=discipline)
+        if form.validate_on_submit():
+            # save edits
+            discipline.description = form.description.data
+            db.session.commit()
+            flash('Activity updated successfully!')
+            return redirect(url_for('show_DSPGPGC_activities', pid=pid, did=did))
+
+        query = ProcessGroup.query.all()
+        return render_template('edit_DSPGPGC_activity.html', form=form, processes=query)
+    else:
+        # print("base de datos no consiguio la disciplina")
+        return 'Error loading #{id}'.format(id=id)
+
+@app.route('/workflow/<int:pid>/<int:did>/delete_DSPGPGC_activity/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_DSPGPGC_activity(pid, did, id):
+
+    if(current_user.rank != 'Administrator'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
+
+    discipline = ActivityDSPGPGC.query.filter_by(id=id).first()
+    if discipline:
+        db.session.delete(discipline)
+        db.session.commit()
+        flash('Actor deleted successfully')
+        return redirect(url_for('show_DSPGPGC_activities', pid=pid, did=did))
+
+    else:
+        flash('Not such activity!')
+
+    query = ProcessGroup.query.all()
     return render_template('index.html', title='Home Page', processes=query)

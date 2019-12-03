@@ -960,7 +960,7 @@ def delete_project(id):
 @login_required
 def show_DPGPAS_activities(pid, did):
 
-    if(current_user.rank != 'Administrator'):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
         flash('You are not an Administrator')
         return render_template('index.html', title='Home Page')
 
@@ -976,7 +976,7 @@ def show_DPGPAS_activities(pid, did):
 def register_DPGPAS_activity(pid, did):
     query = ProcessGroup.query.all()
 
-    if(current_user.rank != 'Administrator'):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
         flash('You are not an Administrator')
         return render_template('index.html', title='Home Page')
     
@@ -995,7 +995,7 @@ def register_DPGPAS_activity(pid, did):
 @login_required
 def edit_DPGPAS_activity(pid, did, id):
 
-    if(current_user.rank != 'Administrator'):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
         flash('You are not an Administrator');
         return render_template('index.html', title='Home Page')
 
@@ -1020,7 +1020,7 @@ def edit_DPGPAS_activity(pid, did, id):
 @login_required
 def delete_DPGPAS_activity(pid, did, id):
 
-    if(current_user.rank != 'Administrator'):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
         flash('You are not an Administrator')
         return render_template('index.html', title='Home Page')
 
@@ -1043,7 +1043,7 @@ def delete_DPGPAS_activity(pid, did, id):
 @login_required
 def show_DSPGPGC_activities(pid, did):
 
-    if(current_user.rank != 'Administrator'):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
         flash('You are not an Administrator')
         return render_template('index.html', title='Home Page')
 
@@ -1059,7 +1059,7 @@ def show_DSPGPGC_activities(pid, did):
 def register_DSPGPGC_activity(pid, did):
     query = ProcessGroup.query.all()
 
-    if(current_user.rank != 'Administrator'):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
         flash('You are not an Administrator')
         return render_template('index.html', title='Home Page')
     
@@ -1078,7 +1078,7 @@ def register_DSPGPGC_activity(pid, did):
 @login_required
 def edit_DSPGPGC_activity(pid, did, id):
 
-    if(current_user.rank != 'Administrator'):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
         flash('You are not an Administrator');
         return render_template('index.html', title='Home Page')
 
@@ -1103,7 +1103,7 @@ def edit_DSPGPGC_activity(pid, did, id):
 @login_required
 def delete_DSPGPGC_activity(pid, did, id):
 
-    if(current_user.rank != 'Administrator'):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
         flash('You are not an Administrator')
         return render_template('index.html', title='Home Page')
 

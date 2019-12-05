@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Nombre del proceso</h2>
+    {{objects.process}}
+    <h3>Actividades</h3>
+    <h4>Actividades de Soporte</h4>
+    <ul>
+        {% for element in objects.dspgpgc %}
+        <li>
+            {{element.activity}}
+            {% if element.tasks %}
+            <h5>Tareas asociadas</h5>
+            <ul>
+                {% for task in element.tasks %}
+                <li>
+                    {{task}}
+                </li>
+                {% endfor %}    
+            </ul>
+            {% endif %}
+        </li>
+    </ul>
+    {% endfor %}
+    <h4>Actividades Habilitadoras</h4>
+    <ul>
+        {% for element in objects.dpgpas %}
+        <li>
+            {{element.activity}}
+            {% if element.tasks %}
+            <h5>Tareas asociadas</h5>
+            <ul>
+                {% for task in element.tasks %}
+                <li>
+                    {{task}}
+                </li>
+                {% endfor %} 
+            </ul>
+            {% endif %}
+        </li>
+    </ul>
+    {% endfor %}
+</body>
+</html>

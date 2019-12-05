@@ -21,13 +21,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link"  href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+                <a id="home_link" class="nav-link"  href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
                 {% if current_user.is_anonymous %}
-                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                <a id="login_link" class="nav-link" href="{{ url_for('login') }}">Login</a>
                 {% else %}
-                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                <a id="logout_link" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                 {% endif %}
             </li>
             {% if current_user.rank == "Administrator" or current_user.rank == "Manager"%}
@@ -40,16 +40,16 @@
                   <a  class="dropdown-item" tabindex="-1" href="#">Configuración</a>
                   <ul class="dropdown-menu">
                     <li class="dropdown-item">
-                        <a href="{{ url_for('show_users') }}">Perfiles de Usuarios</a>
+                        <a id="perfiles_link" href="{{ url_for('show_users') }}">Perfiles de Usuarios</a>
                     </li>
                     <li class="dropdown-item">
-                        <a href="{{ url_for('show_DPGPAS') }}">Disciplinas del Proceso</a>
+                        <a id="disciplinas_proceso_link" href="{{ url_for('show_DPGPAS') }}">Disciplinas del Proceso</a>
                     </li>
                     <li class="dropdown-item">
-                        <a href="{{ url_for('show_DSPGPGC') }}">Disciplinas de Soporte</a>
+                        <a id="disciplinas_soporte_link" href="{{ url_for('show_DSPGPGC') }}">Disciplinas de Soporte</a>
                     </li>
                     <li class="dropdown-item">
-                        <a href="{{ url_for('show_project') }}">Proyectos</a>
+                        <a id="proyectos_link" href="{{ url_for('show_project') }}">Proyectos</a>
                     </li>
                     <li class="dropdown-submenu">
                       <a class="dropdown-item" href="{{ url_for('show_process_groups') }}">Grupos de Procesos</a>

@@ -30,6 +30,7 @@
                 <a id="logout_link" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                 {% endif %}
             </li>
+            {% if not current_user.is_anonymous %}
             <li class="nav-item dropdown">
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="#">Action</a>
@@ -39,10 +40,11 @@
                     <a  class="dropdown-item" tabindex="-1" href="#">Configuración</a>
                     <ul class="dropdown-menu">
                         {% if current_user.rank == "Administrator" or current_user.rank == "Manager"%}
-
+                        {% if current_user.rank == "Administrator" %}
                         <li class="dropdown-item">
                             <a href="{{ url_for('show_users') }}">Perfiles de Usuarios</a>
                         </li>
+                        {% endif %}
                         <li class="dropdown-item">
                             <a href="{{ url_for('show_DPGPAS') }}">Disciplinas del Proceso</a>
                         </li>
@@ -59,10 +61,12 @@
                                         <ul class="dropdown-menu">
                                             {% for process in processes %}
                                             <li class="dropdown-submenu"><a class="dropdown-item" href="{{ url_for('show_workflow', id=process.id) }}">{{ process.description }}</a>
+                                                {% if current_user.rank != "Specialist" %}
                                                 <ul class="dropdown-menu">
                                                     <li class="dropdown-item"><a href="{{ url_for('show_tecAndTools', pid=process.id)}}">Técnicas y Herramientas</a></li>
                                                     <li class="dropdown-item"><a href="{{ url_for('show_participants_actors', pid=process.id)}}">Actores Participantes</a></li>
                                                 </ul>
+                                                {% endif %}
                                             </li>
                                             {% endfor %}
                                         </ul>
@@ -73,6 +77,7 @@
                     </li>
                     </div>
                 </li>
+                {% endif %}
             </ul>
         </div>
         </nav>

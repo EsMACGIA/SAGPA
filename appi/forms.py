@@ -28,7 +28,7 @@ class EditForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     rank = SelectField(
         'User Rank',
-        choices=[('General', 'General'), ('Administrator', 'Administrador'), ('Manager', 'Gerente')]
+        choices=[('General', 'General'), ('Administrator', 'Administrador'), ('Manager', 'Gerente'), ('Specialist', 'Especialista')]
     )
     project_id = QuerySelectField('Proyecto', query_factory=lambda: Project.query.all(), default=None)
     submit = SubmitField('Editar')

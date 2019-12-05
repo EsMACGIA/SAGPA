@@ -39,6 +39,16 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div id="div-form-table">
+      <h1 class="text-center">Generar Reporte PDF</h1>
+      <div class="text-center">
+        <a href="{{ url_for('pdf_template', pid=process.id) }}">
+          <button type="button" class="btn btn-primary btn-sm my-button">Generar Reporte</button>
+        </a>     
+      </div>
+    <div>
+  </div>
 </div>
 
 {% endblock %}

@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, make_response
 from appi import app, db
 from flask_login import current_user, login_user, logout_user, login_required
 from appi.models import User, DPGPAS, DSPGPGC, ProcessGroup, ProcessGroupWithDPGPAS2, ProcessGroupWithDSPGPGC2
@@ -16,6 +16,7 @@ from appi.forms import RegistrationForm, LoginForm, EditForm, RegistrationFormDP
                          EditFormDSPGPGCActivity, RegistrationFormDSPGPGCActivity,RegistrationFormTaskDPGPASActivities
 from appi.tables import Users_Table, DPGPAS_Table, DSPGPGC_Table, ProcessGroup_Table, Tools_Table, Tec_Table, Participants_Actors_Table, Project_Table, \
                          ActivityDPGPAS_Table, ActivityDSPGPGC_Table, TaskActivityDPGPAS_Table,TaskActivityDSPGPGC_Table
+import pdfkit
 
 @app.route('/')
 @app.route('/index')
@@ -1294,4 +1295,51 @@ def delete_DSPGPGC_activity_task(pid, did, id, aid):
     return render_template('index.html', title='Home Page', processes=query)
 
 
+### Reportes PDF
+@app.route('/reporte_pdf/<int:pid>')
+def pdf_template(pid):
+    if(current_user.rank != 'Administrator' and current_user.rank != 'Specialist'):
+        flash('You are not an Administrator')
+        return render_template('index.html', title='Home Page')
 
+    process = ProcessGroup.query.filter_by(id = pid).first().description
+    activity_dspgpgc = ActivityDSPGPGC.query.filter_by(process_id=pid)
+    activity_dpgpas = ActivityDPGPAS.query.filter_by(process_id=pid)
+    actividad_tarea_dspgpgc = []
+    actividad_tarea_dpgpas = []
+    for i in activity_dspgpgc:
+        print(i)
+        tarea = TaskActivityDSPGPGC.query.filter_by(activity_id=i.id)
+        if tarea.count() > 0:
+            temp = {
+            'activity' : i,
+            'tasks' : tarea
+            }
+        else:
+            temp = {
+                'activity': i
+            }
+        actividad_tarea_dspgpgc.append(temp)
+    for i in activity_dpgpas:
+        tarea = TaskActivityDPGPAS.query.filter_by(activity_id=i.id)
+        if tarea.count() > 0:
+            temp = {
+                'activity' : i,
+                'tasks' : tarea
+            }
+        else:
+            temp = {
+                'activity': i
+            }
+        actividad_tarea_dpgpas.append(temp)
+    objects = {
+        'process' : process,
+        'dspgpgc' : actividad_tarea_dspgpgc,
+        'dpgpas' : actividad_tarea_dpgpas
+    }
+    rendered = render_template('pdf_report.html',objects=objects)
+    pdf = pdfkit.from_string(rendered,False)
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=reporte.pdf'
+    return response

@@ -21,17 +21,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link"  href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+                <a id="home_link" class="nav-link"  href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
                 {% if current_user.is_anonymous %}
-                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                <a id="login_link" class="nav-link" href="{{ url_for('login') }}">Login</a>
                 {% else %}
-                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                <a id="logout_link" class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                 {% endif %}
             </li>
-                {% if current_user.rank == "Specialist" or current_user.rank == "Administrator" or current_user.rank == "Manager"%}
-                <li class="nav-item dropdown">
+            <li class="nav-item dropdown">
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
@@ -39,21 +38,6 @@
                     <li class="dropdown-submenu dropdown-item">
                     <a  class="dropdown-item" tabindex="-1" href="#">Configuración</a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-submenu">
-                                <a class="dropdown-item" href="{{ url_for('show_process_groups') }}">Grupos de Procesos</a>
-                                <ul class="dropdown-menu">
-                                        {% for process in processes %}
-                                        <li class="dropdown-submenu"><a class="dropdown-item" href="{{ url_for('show_workflow', id=process.id) }}">{{ process.description }}</a>
-                                            <ul class="dropdown-menu">
-                                                <li class="dropdown-item"><a href="{{ url_for('show_tecAndTools', pid=process.id)}}">Técnicas y Herramientas</a></li>
-                                                <li class="dropdown-item"><a href="{{ url_for('show_participants_actors', pid=process.id)}}">Actores Participantes</a></li>
-                                            </ul>
-                                        </li>
-                                        {% endfor %}
-                                </ul>
-                                </li>
-                {% endif %}
-
                         {% if current_user.rank == "Administrator" or current_user.rank == "Manager"%}
 
                         <li class="dropdown-item">
@@ -68,11 +52,27 @@
                         <li class="dropdown-item">
                             <a href="{{ url_for('show_project') }}">Proyectos</a>
                         </li>
+                        {% endif %}
+                        {% if current_user.rank == "Specialist" or current_user.rank == "Administrator" or current_user.rank == "Manager"%}
+                                <li class="dropdown-submenu">
+                                        <a class="dropdown-item" href="{{ url_for('show_process_groups') }}">Grupos de Procesos</a>
+                                        <ul class="dropdown-menu">
+                                            {% for process in processes %}
+                                            <li class="dropdown-submenu"><a class="dropdown-item" href="{{ url_for('show_workflow', id=process.id) }}">{{ process.description }}</a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="dropdown-item"><a href="{{ url_for('show_tecAndTools', pid=process.id)}}">Técnicas y Herramientas</a></li>
+                                                    <li class="dropdown-item"><a href="{{ url_for('show_participants_actors', pid=process.id)}}">Actores Participantes</a></li>
+                                                </ul>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                </li>
+                        {% endif %}
+
                     </ul>
                     </li>
                     </div>
                 </li>
-                {% endif %}
             </ul>
         </div>
         </nav>
